@@ -175,8 +175,7 @@ Hệ chuyên gia là gì? [1] Hệ chuyên gia là một chương trình cơ s�
 • 3
 • 1, 2, 3
 
-Cho biểu đồ Venn dưới đây, cách viết tập hợp T đúng là [
-]
+Cho biểu đồ Venn dưới đây, cách viết tập hợp T đúng là []
 • T = {x | x là một trong các tháng có 31 ngày trong năm};
 • T = {x | x là một trong các tháng có 30 ngày trong năm};
 • T = {x | x là một trong các tháng trong năm};
@@ -403,143 +402,137 @@ Từ nào sau đây KHÔNG liên quan đến thuật toán cây quyết định?
 • Tham lam
 ✅ Quy hoạch động
 
-Công thức sau được sử dụng trong thuật toán nào? [
-]
+Công thức sau được sử dụng trong thuật toán nào? []
 ✅ ID3
 • KNN
 • Naïve Bayes
-• SVM
-`.trim();
+• SVM`.trim();
 
     function shuffleArray(array) {
-    return array
-      .map(value => ({ value, sort: Math.random() }))
-      .sort((a, b) => a.sort - b.sort)
-      .map(({ value }) => value);
-  }
-
-  const originalQuestions = rawData.split("\n\n").map(block => {
-    const lines = block.trim().split('\n');
-    const question = lines[0];
-    const answers = lines.slice(1).map(line => {
-      const isCorrect = line.trim().startsWith("✅");
-      const text = line.replace(/^✅|^•/, '').trim();
-      return { text, isCorrect };
-    });
-    return { question, answers };
-  });
-
-  let questions = [];
-
-  const form = document.getElementById('quizForm');
-  const timerEl = document.getElementById('timer');
-  const resultEl = document.getElementById('result');
-  const submitBtn = document.getElementById('submitBtn');
-  const startBtn = document.getElementById('startBtn');
-  let timeLeft = 300;
-  let timerInterval;
-
-  function formatTime(sec) {
-    const m = String(Math.floor(sec / 60)).padStart(2, '0');
-    const s = String(sec % 60).padStart(2, '0');
-    return `${m}:${s}`;
-  }
-
-  function updateTimer() {
-    timerEl.textContent = `Thời gian còn lại: ${formatTime(timeLeft)}`;
-    if (timeLeft <= 0) {
-      clearInterval(timerInterval);
-      submitExam();
+      return array
+        .map(value => ({ value, sort: Math.random() }))
+        .sort((a, b) => a.sort - b.sort)
+        .map(({ value }) => value);
     }
-    timeLeft--;
-  }
 
-  startBtn.onclick = () => {
-    startBtn.style.display = 'none';
-    timerEl.style.display = 'block';
-    form.style.display = 'block';
-    submitBtn.style.display = 'block';
-    timeLeft = 300;
-    questions = shuffleArray(originalQuestions).map(q => ({
-      question: q.question,
-      answers: shuffleArray(q.answers)
-    }));
-    renderQuestions();
-    timerInterval = setInterval(updateTimer, 1000);
-  };
-
-  function renderQuestions() {
-    form.innerHTML = '';
-    questions.forEach((q, qIndex) => {
-      const div = document.createElement('div');
-      div.className = 'question';
-      div.innerHTML = `<p><strong>Câu ${qIndex + 1}:</strong> ${q.question}</p>`;
-      const options = document.createElement('div');
-      options.className = 'options';
-      q.answers.forEach((ans, aIndex) => {
-        const id = `q${qIndex}_a${aIndex}`;
-        options.innerHTML += `
-          <label>
-            <input type="radio" name="q${qIndex}" value="${aIndex}">
-            ${ans.text}
-          </label>`;
+    const originalQuestions = rawData.split("\n\n").map(block => {
+      const lines = block.trim().split('\n');
+      const question = lines[0];
+      const answers = lines.slice(1).map(line => {
+        const isCorrect = line.trim().startsWith("✅");
+        const text = line.replace(/^✅|^•/, '').trim();
+        return { text, isCorrect };
       });
-      div.appendChild(options);
-      form.appendChild(div);
+      return { question, answers };
     });
-  }
 
-  submitBtn.onclick = submitExam;
+    let questions = [];
+    const form = document.getElementById('quizForm');
+    const timerEl = document.getElementById('timer');
+    const resultEl = document.getElementById('result');
+    const submitBtn = document.getElementById('submitBtn');
+    const startBtn = document.getElementById('startBtn');
+    let timeLeft = 300;
+    let timerInterval;
 
-  function submitExam() {
-    clearInterval(timerInterval);
-    const unanswered = [];
-    let correct = 0;
+    function formatTime(sec) {
+      const m = String(Math.floor(sec / 60)).padStart(2, '0');
+      const s = String(sec % 60).padStart(2, '0');
+      return `${m}:${s}`;
+    }
 
-    questions.forEach((q, qIndex) => {
-      const selected = form.querySelector(`input[name="q${qIndex}"]:checked`);
-      const div = form.children[qIndex];
-      div.classList.remove("correct", "incorrect");
+    function updateTimer() {
+      timerEl.textContent = `Thời gian còn lại: ${formatTime(timeLeft)}`;
+      if (timeLeft <= 0) {
+        clearInterval(timerInterval);
+        submitExam();
+      }
+      timeLeft--;
+    }
 
-      const correctAnswer = q.answers.find(a => a.isCorrect);
-      const correctText = correctAnswer.text;
+    startBtn.onclick = () => {
+      startBtn.style.display = 'none';
+      timerEl.style.display = 'block';
+      form.style.display = 'block';
+      submitBtn.style.display = 'block';
+      timeLeft = 300;
+      questions = shuffleArray(originalQuestions).map(q => ({
+        question: q.question,
+        answers: shuffleArray(q.answers)
+      }));
+      renderQuestions();
+      timerInterval = setInterval(updateTimer, 1000);
+    };
 
-      if (!selected) {
-        unanswered.push(qIndex + 1);
-        div.classList.add("incorrect");
-        const feedback = document.createElement('div');
-        feedback.className = 'correct-answer';
-        feedback.textContent = `Bạn chưa chọn. Đáp án đúng: ${correctText}`;
-        div.appendChild(feedback);
-      } else {
-        const userAns = q.answers[parseInt(selected.value)];
-        if (userAns.isCorrect) {
-          div.classList.add("correct");
-          correct++;
-        } else {
+    function renderQuestions() {
+      form.innerHTML = '';
+      questions.forEach((q, qIndex) => {
+        const div = document.createElement('div');
+        div.className = 'question';
+        div.innerHTML = `<p><strong>Câu ${qIndex + 1}:</strong> ${q.question}</p>`;
+        const options = document.createElement('div');
+        options.className = 'options';
+        q.answers.forEach((ans, aIndex) => {
+          options.innerHTML += `
+            <label>
+              <input type="radio" name="q${qIndex}" value="${aIndex}">
+              ${ans.text}
+            </label>`;
+        });
+        div.appendChild(options);
+        form.appendChild(div);
+      });
+    }
+
+    submitBtn.onclick = submitExam;
+
+    function submitExam() {
+      clearInterval(timerInterval);
+      const unanswered = [];
+      let correct = 0;
+
+      questions.forEach((q, qIndex) => {
+        const selected = form.querySelector(`input[name="q${qIndex}"]:checked`);
+        const div = form.children[qIndex];
+        div.classList.remove("correct", "incorrect");
+        const correctAnswer = q.answers.find(a => a.isCorrect);
+
+        if (!selected) {
+          unanswered.push(qIndex + 1);
           div.classList.add("incorrect");
           const feedback = document.createElement('div');
           feedback.className = 'correct-answer';
-          feedback.textContent = `Đáp án đúng: ${correctText}`;
+          feedback.textContent = `Bạn chưa chọn. Đáp án đúng: ${correctAnswer.text}`;
           div.appendChild(feedback);
+        } else {
+          const userAns = q.answers[parseInt(selected.value)];
+          if (userAns.isCorrect) {
+            div.classList.add("correct");
+            correct++;
+          } else {
+            div.classList.add("incorrect");
+            const feedback = document.createElement('div');
+            feedback.className = 'correct-answer';
+            feedback.textContent = `Đáp án đúng: ${correctAnswer.text}`;
+            div.appendChild(feedback);
+          }
         }
+      });
+
+      if (unanswered.length > 0) {
+        alert(`Bạn chưa trả lời các câu: ${unanswered.join(', ')}`);
+        return;
       }
-    });
 
-    if (unanswered.length > 0) {
-      alert(`Bạn chưa trả lời các câu: ${unanswered.join(', ')}`);
-      return;
+      const score = Math.round((correct / questions.length) * 100);
+      resultEl.style.display = 'block';
+      resultEl.innerHTML = `
+        ✅ Số câu đúng: ${correct}/${questions.length}<br>
+        ❌ Số câu sai: ${questions.length - correct}<br>
+        🎯 Điểm: ${score}/100
+      `;
+      submitBtn.disabled = true;
     }
-
-    const score = Math.round((correct / questions.length) * 100);
-    resultEl.style.display = 'block';
-    resultEl.innerHTML = `
-      ✅ Số câu đúng: ${correct}/${questions.length}<br>
-      ❌ Số câu sai: ${questions.length - correct}<br>
-      🎯 Điểm: ${score}/100
-    `;
-    submitBtn.disabled = true;
-  }
   </script>
 </body>
 </html>
