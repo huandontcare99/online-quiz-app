@@ -1,41 +1,528 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ứng dụng Thi trắc nghiệm Online</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <title>Trắc nghiệm Trí tuệ Nhân tạo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      padding: 20px;
+      background: #f4f4f4;
+      color: #333;
+    }
+    h1 {
+      text-align: center;
+      color: #2c3e50;
+    }
+    #timer {
+      text-align: center;
+      font-size: 20px;
+      margin: 15px 0;
+      color: #d63031;
+    }
+    .question {
+      background: white;
+      padding: 15px;
+      margin-bottom: 15px;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      transition: all 0.3s;
+      border-left: 6px solid transparent;
+    }
+    .question.correct { border-left-color: green; }
+    .question.incorrect { border-left-color: red; }
+    .options label {
+      display: block;
+      padding: 8px;
+      background: #f0f0f0;
+      border-radius: 5px;
+      margin-top: 5px;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    .options input[type="radio"] {
+      margin-right: 10px;
+    }
+    .options label:hover {
+      background: #dfe6e9;
+    }
+    .correct-answer {
+      margin-top: 8px;
+      font-weight: bold;
+      color: green;
+    }
+    button {
+      padding: 12px 25px;
+      font-size: 16px;
+      border: none;
+      border-radius: 6px;
+      background: #0984e3;
+      color: white;
+      cursor: pointer;
+      margin: 15px auto;
+      display: block;
+    }
+    button:hover {
+      background: #0652DD;
+    }
+    #result {
+      font-weight: bold;
+      text-align: center;
+      background: white;
+      padding: 15px;
+      margin-top: 20px;
+      border-radius: 6px;
+      box-shadow: 0 0 5px rgba(0,0,0,0.1);
+    }
+    #quizForm, #submitBtn, #result, #timer {
+      display: none;
+    }
+    @media (max-width: 600px) {
+      body {
+        padding: 10px;
+      }
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1>Thi Trắc Nghiệm Online</h1>
-            <div id="timer">Thời gian còn lại: <span>00:00</span></div>
-        </header>
+  <h1>Bài Trắc Nghiệm Trí Tuệ Nhân Tạo</h1>
+  <div id="timer">Thời gian còn lại: 05:00</div>
+  <form id="quizForm"></form>
+  <button id="submitBtn">Nộp bài</button>
+  <div id="result"></div>
+  <button id="startBtn">Bắt đầu làm bài</button>
 
-        <main id="quiz-area">
-            <div id="question-container">
-                <h2 id="question-text"></h2>
-                <div id="answer-options" class="options-grid">
-                    </div>
-            </div>
+  <script>
+    const rawData = `
+Thuật toán nào sau đây sử dụng Entropy làm độ đo thông tin?
+✅ ID3
+• KNN
+• Naïve Bayes
+• SVM
 
-            <div class="controls">
-                <button id="prev-btn" class="btn" disabled>Câu trước</button>
-                <button id="next-btn" class="btn">Câu kế tiếp</button>
-                <button id="submit-btn" class="btn submit-btn" style="display: none;">Nộp bài</button>
-            </div>
-        </main>
+Kết quả của thao tác phân cụm KHÔNG phụ thuộc vào:
+• Đặc trưng được lựa chọn để phân cụm.
+• Hàm đo khoảng cách giữa các điểm dữ liệu.
+• Thuật toán phân cụm.
+✅ Thời gian thực hiện thuật toán phân cụm.
 
-        <div id="result-area" class="hidden">
-            <h2>Kết quả của bạn</h2>
-            <p>Điểm số: <span id="score"></span> / <span id="total-questions"></span></p>
-            <button id="restart-btn" class="btn">Làm lại</button>
-            <div id="result-details">
-                </div>
-        </div>
-    </div>
+Hãy chọn phương án đúng nhất với khái niệm "Học máy":
+✅ Là lĩnh vực của trí tuệ nhân tạo liên quan đến việc xây dựng các kỹ thuật cho phép các hệ thống "học" tự động từ dữ liệu để giải quyết vấn đề cụ thể.
+• Là lĩnh vực giúp tự động hóa các công việc trong sản xuất, kinh doanh bằng máy tính điện tử.
+• Là kỹ thuật tập trung vào việc phân tích dữ liệu, tìm ra những điểm mới trong dữ liệu nhằm đáp ứng hoạt động nghiên cứu.
+• Là lĩnh vực huấn luyện cho máy tự động làm các công việc thay thế hoạt động của con người.
 
-    <script src="script.js"></script>
+Để xác định một khách hàng tiềm năng ta sử dụng bài toán:
+✅ Phân lớp
+• Phân cụm
+• Khai thác tập phổ biến
+• Hồi quy
+
+Cho các bước sau: B1. Gán các điểm dữ liệu vào các cụm theo trọng tâm gần nhất B2. Chọn k trọng tâm B3. Tính lại trọng tâm mới B4. Tính khoảng cách từ các điểm dữ liệu đến k trọng tâm Thứ tự đúng của các bước theo thuật toán k-means lần lượt là:
+• B1 – B2 – B3 – B4
+• B2 – B3 – B4 – B1
+✅ B2 – B4 – B1 – B3
+• B2 – B1 – B4 – B3
+
+Trong các độ đo để lựa chọn thuộc tính rẽ nhánh khi dựng cây quyết định, độ đo nào dễ bị nghiêng về thuộc tính có nhiều giá trị?
+✅ Information Gain
+• Split Info
+• Gain Ratio
+• Entropy
+
+Trong bài toán dự đoán độ tin cậy của khách hàng vay tiền ngân hàng. Trường hợp khách hàng là đáng tin cậy nhưng kết quả dự đoán là không tin cậy. Vậy kết quả dự đoán được gọi là:
+• True Positive
+• False Positive
+• True Negative
+✅ False Negative
+
+Thuật toán nào sau đây tốn thời gian tính khoảng cách giữa các đối tượng dữ liệu?
+• ID3
+• CART
+✅ KNN
+• Naïve Bayes
+
+Trong các ứng dụng sau, ứng dụng nào KHÔNG PHẢI là ứng dụng của phân lớp?
+• Nhận dạng khuôn mặt
+• Nhận dạng chữ viết
+• Phát hiện thư rác
+✅ Phân tích giỏ hàng
+
+K-means là phương pháp phân cụm dựa trên:
+✅ Phân hoạch (partitioning)
+• Mật độ  (density based)
+• Phân cấp (hierarchical)
+• Lưới (grid based)
+
+Xử lý tri thức không chắc chắn là gì? [1] Tri thức sai. [2] Hơn 80% ứng dụng trong thực tế không thể giải quyết được bằng các phương pháp lập luận chắc chắn. Hệ chuyên gia có thể giải quyết được những ứng dụng này nhờ vào các phương pháp xử lý tri thức không chắc chắn. [3] Quá nhiều phương án cho kết quả.
+• 1
+✅ 2
+• 3
+• 1, 2, 3
+
+Tri thức chuyên gia là: [1] Cơ sở tri thức. [2] Tri thức giải bài toán trong hệ chuyên gia là tri thức thu thập được từ người chuyên gia. [3] Bộ máy suy diễn.
+• 1
+✅ 2
+• 3
+• 1, 2, 3
+
+Hệ chuyên gia là gì? [1] Hệ chuyên gia là một chương trình cơ sở tri thức làm việc giống như một chuyên gia con người. [2] Hệ chuyên gia là một chương trình cơ sở dữ liệu tính toán đạt kết quả đúng nhất. [3] Hệ chuyên gia là một chương trình máy tính, tính toán nhanh nhất.
+✅ 1
+• 2
+• 3
+• 1, 2, 3
+
+Cho biểu đồ Venn dưới đây, cách viết tập hợp T đúng là [
+]
+• T = {x | x là một trong các tháng có 31 ngày trong năm};
+• T = {x | x là một trong các tháng có 30 ngày trong năm};
+• T = {x | x là một trong các tháng trong năm};
+✅ T = {x | x là một trong các tháng có ít hơn 31 ngày trong năm}.
+
+Giá trị chân lý là 0, vậy giá trị này là giá trị  của tri thức: [1] Chắc chắn. [2] Không chắc chắn. [3] Chắc chắn hoặc Không chắc chắn.
+• 1
+• 2
+• 3
+✅ 1, 2, 3
+
+Luật suy diễn không chắc chắn là P→Q và giá trị chân lý là: [1] 1 hoặc 0. [2] Trong khoảng 0 và 1. [3] Ngoài khoảng 0 và 1.
+• 1
+✅ 2
+• 3
+• 1, 2, 3
+
+Tri thức không chắc chắn là: [1] Loại tri thức mà miền giá trị chân lý của nó là không chắc chắn đúng và không chắc chắn sai. [2] Loại tri thức mà miền giá trị chân lý của nó là không chắc chắn đúng. [3] Loại tri thức mà miền giá trị chân lý của nó là không chắc chắn sai.
+✅ 1
+• 2
+• 3
+• 1, 2, 3
+
+Giá trị chân lý của phép tương đương P↔Q, là sai khi: [1] P=0 và Q=0 [2] P=1 và Q=0 [3] P=1 và Q=1
+• 1
+✅ 2
+• 3
+• 1, 2, 3
+
+Giá trị chân lý của phép tương đương P↔Q, là đúng khi: [1] P=0 và Q=0 [2] P=1 và Q=0 [3] P=0 và Q=1
+✅ 1
+• 2
+• 3
+• 1, 2, 3
+
+Giá trị chân lý của liên từ P∧Q là sai khi: [1] P=1 và Q=0 [2] P=0 và Q=0 [3] P=0 và Q=1
+• 1
+• 2
+• 3
+✅ 1, 2, 3
+
+
+Giá trị chân lý của liên từ P∨Q là đúng khi: [1] P=1 và Q=0 [2] P=1 và Q=1 [3] P=0 và Q=1
+• 1
+• 2
+• 3
+✅ 1, 2, 3
+
+
+Giá trị chân lý của liên từ  P∧Q là đúng khi: [1] P=1 và Q=0 [2] P=1 và Q=1 [3] P=0 và Q=1
+• 1
+✅ 2
+• 3
+• 1, 2, 3
+
+
+Giá trị chân lý của liên từ P∨Q là sai khi: [1] P=1 và Q=0 [2] P=0 và Q=0 [3] P=0 và Q=1
+• 1
+✅ 2
+• 3
+• 1, 2, 3
+
+Giá trị chân lý của phủ định ¬ là: [1] ¬P là logic F nếu P là logic T. [2] ¬P là logic T nếu P là logic F. [3] P=0 thì ¬P=1.
+• 1
+• 2
+• 3
+✅ 1, 2, 3
+
+Luật giao hoán: [1] ¬(P∨Q) = (¬P∧¬Q). ¬(P∧Q) = (¬P∨¬Q). [2] P∨(Q∧R) = (P∨Q)∧(P∨R). P∧(Q∨R) = (P∧Q)∨(P∧R). [3] (P∧Q) = (Q∧P). (P∨Q) = (Q∨P).
+• 1
+• 2
+✅ 3
+• 1, 2, 3
+
+Toán tử logic: [1] Là hai chữ cái in hoa T và F, trong đó T xác định nội dung của phát biểu là đúng và F xác định nội dung của phát biểu là sai. [2] Là các chữ cái in hoa như A, B, C, D, …. được sử dụng để biểu diễn đề xuất. [3] Gồm có các loại như: ∧ , ∨, ¬, →, ↔
+• 1
+• 2
+✅ 3
+• 1, 2, 3
+
+Thông tin thủ tục: [1] Thông tin trả về giá trị mặc định đúng hoặc sai. [2] Khung có thể chứa thông tin thủ tục giải quyết bài toán. [3] Thông tin mô tả về các thành phần của đối tượng.
+• 1
+✅ 2
+• 3
+• 1, 2, 3
+
+Thông tin mặc định: [1] Thông tin trả về giá trị mặc định đúng hoặc sai. [2] Khung này có thể chứa khung  khác. [3] Thông tin mô tả về các thành phần của đối tượng.
+✅ 1
+• 2
+• 3
+• 1, 2, 3
+
+Tính đóng gói: [1] Thể hiện tri thức của bài toán dưới dạng lớp của nhiều đối tượng chứa nhiều thuộc tính. [2] Khung tổng quát nhất được gọi là khung cơ sở và khung đặc trưng hơn được gọi là khung dẫn xuất. Các thuộc tính của khung dẫn xuất có quyền được thừa kế từ các thuộc tính của khung cơ sở. [3]  Phương pháp biểu diễn này còn được gọi là ngôn ngữ biểu diễn dùng để mã hóa tri thức bằng ký hiệu.
+✅ 1
+• 2
+• 3
+• 1, 2, 3
+
+Biểu diễn tri thức nhờ logic vị từ : [1] Tri thức được thể hiện dưới dạng lớp của các biểu thức logic và cơ sở tri thức giải bài toán được thiết lập trên cơ sở lớp của các biểu thức logic này. [2] Luật suy diễn và thủ tục chứng minh tri thức được lập luận trên cơ sở toán học logic với các yêu cầu đặt ra của bài toán. [3] Với phương pháp biểu diễn này cung cấp ý tưởng để tiếp cận với ngôn ngữ lập trình Prolog trong lĩnh vực trí tuệ nhân tạo.
+• 1
+• 2
+• 3
+✅ 1, 2, 3
+
+Nêu phát biểu đúng nhất về tri thức thủ tục: [1] Là các khẳng định về một sự kiện, khái niệm nào đó (trong phạm vi xác định). [2] Là thủ tục tổng quát mô tả cách giải quyết bài toán. Loại tri thức này bao gồm thủ tục tìm kiếm và luật suy diễn. [3] Cho biết một đối tượng, sự kiện, vấn đề, khái niệm,... được thấy, cảm nhận, cấu tạo như thế nào.
+• 1
+✅ 2
+• 3
+• 1, 2, 3
+
+Suy diễn tiến là: [1] Với chiến lược này, hướng tìm kiếm bắt đầu từ dữ liệu ban đầu của bài toán thông qua không gian trạng thái thái dẫn về đích của bài toán. [2] Thủ tục tìm kiếm bắt đầu từ trạng thái đích của bài toán tìm kiếm thông qua không gian trạng thái để đạt đến trạng thái ban đầu của bài toán. [3] Giải thuật tìm lời giải của bài toán bằng cách tìm kiếm thăm dò thông qua không gian trạng thái mức theo mức.
+✅ 1
+• 2
+• 3
+• 1, 2, 3
+
+Trình bày suy theo chiều rộng là: [1] Chiến lược tìm kiếm suy lùi hay còn được gọi là lý giải suy diễn tiến. [2] Thủ tục tìm kiếm bắt đầu từ trạng thái đích của bài toán tìm kiếm thông qua không gian trạng thái để đạt đến trạng thái ban đầu của bài toán. [3] Giải thuật tìm lời giải của bài toán bằng cách tìm kiếm thăm dò thông qua không gian trạng thái mức theo mức.
+• 1
+• 2
+✅ 3
+• 1, 2, 3
+
+Thuật toán tìm kiếm theo chiều rộng sử dụng thuật toán TREE_SEARCH với cấu trúc dữ liệu: [1] Hàng đợi (QUEUE). [2] Ngăn xếp (STACK). [3] Hàng đợi được sắp xếp. [4] Danh sách liên kết.
+✅ 1
+• 2
+• 3
+• 4
+
+Tìm kiếm Heuristic là: [1] Giải thuật xây dựng dãy nối tiếp của tất cả các trạng thái trên đường lời giải bắt đầu từ trạng thái ban đầu thông qua không gian trạng thái đến trạng thái đích của bài toán. [2] Giải thuật tìm lời giải của bài toán bằng cách tìm kiếm thăm dò thông qua không gian trạng thái mức theo mức. [3] Kỹ thuật chọn lọc nút tốt nhất để tiếp tục quá trình tìm kiếm trong không gian trạng thái của bài toán.
+• 1
+• 2
+✅ 3
+• 1, 2, 3
+
+Trong thuật toán A*, hàm g(n) là: [1] Tổng chi phí ước lượng đường đi từ n tới đích. [2] Tổng chi phí ước lượng từ nút ban đầu tới n. [3] Tổng chi phí ước lượng từ nút n tới đích.
+• 1
+✅ 2
+• 3
+• 1, 2, 3
+
+Thuật toát A* có hàm đánh giá f(n)=: [1] h(n) + (heuristic). [2] h(n) + g(n). [3] g(n).
+• 1
+✅ 2
+• 3
+• 1, 2, 3
+
+Bài toán: Có ba nhà triệu phú và ba tên cướp ở bên bờ tả ngạn một con sông, cùng một chiếc thuyền chở được một hoặc hai người. Hãy tìm cách đưa mọi người qua sông sao cho không để lại ở bên bờ sông kẻ cướp nhiều hơn triệu phú. Trạng thái ban đầu của bài toán là:
+✅ (3, 3, 1)
+• (1, 1, 3)
+• (3, 1, 3)
+• (1, 3, 1)
+
+
+Bài toán: Có ba nhà triệu phú và ba tên cướp ở bên bờ tả ngạn một con sông, cùng một chiếc thuyền chở được một hoặc hai người. Hãy tìm cách đưa mọi người qua sông sao cho không để lại ở bên bờ sông kẻ cướp nhiều hơn triệu phú. Trạng thái kết thúc của bài toán là:
+• (0, 3, 0)
+✅ (0, 0, 0)
+• (3, 0, 3)
+• (0, 0, 3)
+
+
+Bài toán: Có ba nhà triệu phú và ba tên cướp ở bên bờ tả ngạn một con sông, cùng một chiếc thuyền chở được một hoặc hai người. Hãy tìm cách đưa mọi người qua sông sao cho không để lại ở bên bờ sông kẻ cướp nhiều hơn triệu phú. Bài toán có bao nhiêu toán tử:
+• 2
+• 3
+• 4
+✅ 5
+
+Tri thức của bài toán gồm: [1] tri thức mô tả. [2] tri thức thủ tục. [3] tri thức điều khiển.
+• 1
+• 2
+• 3
+✅ 1, 2, 3
+
+Nút là gì: [1] tương ứng với một trạng thái trong không gian trạng thái của bài toán. [2] tương ứng với một luật ứng dụng chuyển tiếp từ nút này đến nút khác. [3] là luật mà vế trái của nó hợp với trạng thái hiện hành và vế phải tạo ra một trạng thái mới.
+✅ 1
+• 2
+• 3
+• 1, 2, 3
+
+Trạng thái đầu là: [1] Là trạng thái khởi tạo của chương trình. [2] Là trạng thái chuyển đổi từ trạng thái này sang trạng thái khác. [3] Là trạng thái kết quả cần tìm kiếm của bài toán.
+✅ 1
+• 2
+• 3
+• 1, 2, 3
+
+Chọn phát biểu KHÔNG đúng: [1] Suy diễn tiến là quá trình suy diễn bắt đầu từ tập sự kiện đã biết, rút ra những sự kiện mới. [2] Suy diễn tiếncho ra khối lượng lớn các thông tin từ một số thông tin ban đầu. [3] Suy diễn tiến là tiếp cận lý tưởng đối với các loại bài toán cần giải quyết các nhiệm vụ như lập kế hoạch, điều hành, điều khiển và diễn dịch. [4] Suy diễn tiến tập trung vào đích đã cho.
+• 1
+• 2
+• 3
+✅ 4
+
+Tri thức thủ tục là: [1] mô tả những gì được biết về bài toán. Loại tri thức này bao gồm các sự kiện, các quan hệ và các tính chất của bài toán. [2] mô tả tổng quát cách giải quyết bài toán. Loại tri thức này bao gồm luật suy diễn hợp lệ, chiến lược tìm kiếm và giải thuật tìm kiếm. [3] là luật chủ chốt để điều khiển quá trình tìm kiếm giải quyết bài toán. [4] Đó là phương pháp thể hiện tri thức trong máy sao cho đủ và hiệu lực để  bài toán được giải tốt nhất.
+• 1
+✅ 2
+• 3
+• 4
+
+Trí tuệ nhân tạo ứng dụng điều khiển Robot theo phương án mắt và tay vào năm nào?
+• 1965
+• 1966
+✅ 1968
+• 1972
+
+Trí tuệ nhân tạo ứng dụng bài toán cờ vua vào năm nào?
+• 1961
+✅ 1963
+• 1964
+• 1980
+
+Trí tuệ nhân tạo chứng minh định lý hình học vào năm nào?
+• 1950
+• 1956
+✅ 1958
+• 1980
+
+Thuật ngữ Trí tuệ nhân tạo xuất hiện khoảng thời gian nào?
+✅ 1950s
+• 1960s
+• 1970s
+• 1980s
+
+Từ nào sau đây KHÔNG liên quan đến thuật toán cây quyết định?
+• Đệ quy
+• Chia để trị
+• Tham lam
+✅ Quy hoạch động
+
+Công thức sau được sử dụng trong thuật toán nào? [
+]
+✅ ID3
+• KNN
+• Naïve Bayes
+• SVM
+`.trim();
+
+    const questions = rawData.split("\n\n").map(block => {
+      const lines = block.trim().split('\n');
+      const question = lines[0];
+      const answers = lines.slice(1).map(line => {
+        const isCorrect = line.trim().startsWith("✅");
+        const text = line.replace(/^✅|^•/, '').trim();
+        return { text, isCorrect };
+      });
+      return { question, answers };
+    });
+
+    const form = document.getElementById('quizForm');
+    const timerEl = document.getElementById('timer');
+    const resultEl = document.getElementById('result');
+    const submitBtn = document.getElementById('submitBtn');
+    const startBtn = document.getElementById('startBtn');
+    let timeLeft = 300; // 5 phút
+
+    function formatTime(sec) {
+      const m = String(Math.floor(sec / 60)).padStart(2, '0');
+      const s = String(sec % 60).padStart(2, '0');
+      return `${m}:${s}`;
+    }
+
+    function updateTimer() {
+      timerEl.textContent = `Thời gian còn lại: ${formatTime(timeLeft)}`;
+      if (timeLeft <= 0) {
+        clearInterval(timerInterval);
+        submitExam();
+      }
+      timeLeft--;
+    }
+
+    let timerInterval;
+
+    startBtn.onclick = () => {
+      startBtn.style.display = 'none';
+      timerEl.style.display = 'block';
+      form.style.display = 'block';
+      submitBtn.style.display = 'block';
+      renderQuestions();
+      timerInterval = setInterval(updateTimer, 1000);
+    };
+
+    function renderQuestions() {
+      form.innerHTML = '';
+      questions.forEach((q, qIndex) => {
+        const div = document.createElement('div');
+        div.className = 'question';
+        div.innerHTML = `<p><strong>Câu ${qIndex + 1}:</strong> ${q.question}</p>`;
+        const options = document.createElement('div');
+        options.className = 'options';
+        q.answers.forEach((ans, aIndex) => {
+          const id = `q${qIndex}_a${aIndex}`;
+          options.innerHTML += `
+            <label>
+              <input type="radio" name="q${qIndex}" value="${aIndex}">
+              ${ans.text}
+            </label>`;
+        });
+        div.appendChild(options);
+        form.appendChild(div);
+      });
+    }
+
+    submitBtn.onclick = submitExam;
+
+    function submitExam() {
+      clearInterval(timerInterval);
+      const unanswered = [];
+      let correct = 0;
+
+      questions.forEach((q, qIndex) => {
+        const selected = form.querySelector(`input[name="q${qIndex}"]:checked`);
+        const div = form.children[qIndex];
+        div.classList.remove("correct", "incorrect");
+
+        const correctAnswer = q.answers.find(a => a.isCorrect);
+        const correctText = correctAnswer.text;
+
+        if (!selected) {
+          unanswered.push(qIndex + 1);
+          div.classList.add("incorrect");
+        } else {
+          const userAns = q.answers[parseInt(selected.value)];
+          if (userAns.isCorrect) {
+            div.classList.add("correct");
+            correct++;
+          } else {
+            div.classList.add("incorrect");
+            const feedback = document.createElement('div');
+            feedback.className = 'correct-answer';
+            feedback.textContent = `Đáp án đúng: ${correctText}`;
+            div.appendChild(feedback);
+          }
+        }
+      });
+
+      if (unanswered.length > 0) {
+        alert(`Bạn chưa trả lời các câu: ${unanswered.join(', ')}`);
+        return;
+      }
+
+      const score = Math.round((correct / questions.length) * 100);
+      resultEl.style.display = 'block';
+      resultEl.innerHTML = `
+        ✅ Số câu đúng: ${correct}/${questions.length}<br>
+        ❌ Số câu sai: ${questions.length - correct}<br>
+        🎯 Điểm: ${score}/100
+      `;
+      submitBtn.disabled = true;
+    }
+  </script>
 </body>
 </html>
