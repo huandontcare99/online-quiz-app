@@ -1,538 +1,485 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-  <meta charset="UTF-8">
-  <title>Trắc nghiệm Trí tuệ Nhân tạo</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <style>
-    * { box-sizing: border-box; }
-    body {
-      font-family: 'Segoe UI', sans-serif;
-      margin: 0;
-      padding: 20px;
-      background: #f4f4f4;
-      color: #333;
-    }
-    h1 {
-      text-align: center;
-      color: #2c3e50;
-    }
-    #timer {
-      text-align: center;
-      font-size: 20px;
-      margin: 15px 0;
-      color: #d63031;
-    }
-    .question {
-      background: white;
-      padding: 15px;
-      margin-bottom: 15px;
-      border-radius: 8px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-      transition: all 0.3s;
-      border-left: 6px solid transparent;
-    }
-    .question.correct { border-left-color: green; }
-    .question.incorrect { border-left-color: red; }
-    .options label {
-      display: block;
-      padding: 8px;
-      background: #f0f0f0;
-      border-radius: 5px;
-      margin-top: 5px;
-      cursor: pointer;
-      transition: 0.2s;
-    }
-    .options input[type="radio"] {
-      margin-right: 10px;
-    }
-    .options label:hover {
-      background: #dfe6e9;
-    }
-    .correct-answer {
-      margin-top: 8px;
-      font-weight: bold;
-      color: green;
-    }
-    button {
-      padding: 12px 25px;
-      font-size: 16px;
-      border: none;
-      border-radius: 6px;
-      background: #0984e3;
-      color: white;
-      cursor: pointer;
-      margin: 15px auto;
-      display: block;
-    }
-    button:hover {
-      background: #0652DD;
-    }
-    #result {
-      font-weight: bold;
-      text-align: center;
-      background: white;
-      padding: 15px;
-      margin-top: 20px;
-      border-radius: 6px;
-      box-shadow: 0 0 5px rgba(0,0,0,0.1);
-    }
-    #quizForm, #submitBtn, #result, #timer {
-      display: none;
-    }
-    @media (max-width: 600px) {
-      body {
-        padding: 10px;
-      }
-    }
-  </style>
-</head>
-<body>
-  <h1>Bài Trắc Nghiệm Trí Tuệ Nhân Tạo</h1>
-  <div id="timer">Thời gian còn lại: 05:00</div>
-  <form id="quizForm"></form>
-  <button id="submitBtn">Nộp bài</button>
-  <div id="result"></div>
-  <button id="startBtn">Bắt đầu làm bài</button>
-
-  <script>
-    const rawData = `
-Thuật toán nào sau đây sử dụng Entropy làm độ đo thông tin?
-✅ ID3
-• KNN
-• Naïve Bayes
-• SVM
-
-Kết quả của thao tác phân cụm KHÔNG phụ thuộc vào:
-• Đặc trưng được lựa chọn để phân cụm.
-• Hàm đo khoảng cách giữa các điểm dữ liệu.
-• Thuật toán phân cụm.
-✅ Thời gian thực hiện thuật toán phân cụm.
-
-Hãy chọn phương án đúng nhất với khái niệm "Học máy":
-✅ Là lĩnh vực của trí tuệ nhân tạo liên quan đến việc xây dựng các kỹ thuật cho phép các hệ thống "học" tự động từ dữ liệu để giải quyết vấn đề cụ thể.
-• Là lĩnh vực giúp tự động hóa các công việc trong sản xuất, kinh doanh bằng máy tính điện tử.
-• Là kỹ thuật tập trung vào việc phân tích dữ liệu, tìm ra những điểm mới trong dữ liệu nhằm đáp ứng hoạt động nghiên cứu.
-• Là lĩnh vực huấn luyện cho máy tự động làm các công việc thay thế hoạt động của con người.
-
-Để xác định một khách hàng tiềm năng ta sử dụng bài toán:
-✅ Phân lớp
-• Phân cụm
-• Khai thác tập phổ biến
-• Hồi quy
-
-Cho các bước sau: B1. Gán các điểm dữ liệu vào các cụm theo trọng tâm gần nhất B2. Chọn k trọng tâm B3. Tính lại trọng tâm mới B4. Tính khoảng cách từ các điểm dữ liệu đến k trọng tâm Thứ tự đúng của các bước theo thuật toán k-means lần lượt là:
-• B1 – B2 – B3 – B4
-• B2 – B3 – B4 – B1
-✅ B2 – B4 – B1 – B3
-• B2 – B1 – B4 – B3
-
-Trong các độ đo để lựa chọn thuộc tính rẽ nhánh khi dựng cây quyết định, độ đo nào dễ bị nghiêng về thuộc tính có nhiều giá trị?
-✅ Information Gain
-• Split Info
-• Gain Ratio
-• Entropy
-
-Trong bài toán dự đoán độ tin cậy của khách hàng vay tiền ngân hàng. Trường hợp khách hàng là đáng tin cậy nhưng kết quả dự đoán là không tin cậy. Vậy kết quả dự đoán được gọi là:
-• True Positive
-• False Positive
-• True Negative
-✅ False Negative
-
-Thuật toán nào sau đây tốn thời gian tính khoảng cách giữa các đối tượng dữ liệu?
-• ID3
-• CART
-✅ KNN
-• Naïve Bayes
-
-Trong các ứng dụng sau, ứng dụng nào KHÔNG PHẢI là ứng dụng của phân lớp?
-• Nhận dạng khuôn mặt
-• Nhận dạng chữ viết
-• Phát hiện thư rác
-✅ Phân tích giỏ hàng
-
-K-means là phương pháp phân cụm dựa trên:
-✅ Phân hoạch (partitioning)
-• Mật độ  (density based)
-• Phân cấp (hierarchical)
-• Lưới (grid based)
-
-Xử lý tri thức không chắc chắn là gì? [1] Tri thức sai. [2] Hơn 80% ứng dụng trong thực tế không thể giải quyết được bằng các phương pháp lập luận chắc chắn. Hệ chuyên gia có thể giải quyết được những ứng dụng này nhờ vào các phương pháp xử lý tri thức không chắc chắn. [3] Quá nhiều phương án cho kết quả.
-• 1
-✅ 2
-• 3
-• 1, 2, 3
-
-Tri thức chuyên gia là: [1] Cơ sở tri thức. [2] Tri thức giải bài toán trong hệ chuyên gia là tri thức thu thập được từ người chuyên gia. [3] Bộ máy suy diễn.
-• 1
-✅ 2
-• 3
-• 1, 2, 3
-
-Hệ chuyên gia là gì? [1] Hệ chuyên gia là một chương trình cơ sở tri thức làm việc giống như một chuyên gia con người. [2] Hệ chuyên gia là một chương trình cơ sở dữ liệu tính toán đạt kết quả đúng nhất. [3] Hệ chuyên gia là một chương trình máy tính, tính toán nhanh nhất.
-✅ 1
-• 2
-• 3
-• 1, 2, 3
-
-Cho biểu đồ Venn dưới đây, cách viết tập hợp T đúng là 
-• T = {x | x là một trong các tháng có 31 ngày trong năm};
-• T = {x | x là một trong các tháng có 30 ngày trong năm};
-• T = {x | x là một trong các tháng trong năm};
-✅ T = {x | x là một trong các tháng có ít hơn 31 ngày trong năm}.
-
-Giá trị chân lý là 0, vậy giá trị này là giá trị  của tri thức: [1] Chắc chắn. [2] Không chắc chắn. [3] Chắc chắn hoặc Không chắc chắn.
-• 1
-• 2
-• 3
-✅ 1, 2, 3
-
-Luật suy diễn không chắc chắn là P→Q và giá trị chân lý là: [1] 1 hoặc 0. [2] Trong khoảng 0 và 1. [3] Ngoài khoảng 0 và 1.
-• 1
-✅ 2
-• 3
-• 1, 2, 3
-
-Tri thức không chắc chắn là: [1] Loại tri thức mà miền giá trị chân lý của nó là không chắc chắn đúng và không chắc chắn sai. [2] Loại tri thức mà miền giá trị chân lý của nó là không chắc chắn đúng. [3] Loại tri thức mà miền giá trị chân lý của nó là không chắc chắn sai.
-✅ 1
-• 2
-• 3
-• 1, 2, 3
-
-Giá trị chân lý của phép tương đương P↔Q, là sai khi: [1] P=0 và Q=0 [2] P=1 và Q=0 [3] P=1 và Q=1
-• 1
-✅ 2
-• 3
-• 1, 2, 3
-
-Giá trị chân lý của phép tương đương P↔Q, là đúng khi: [1] P=0 và Q=0 [2] P=1 và Q=0 [3] P=0 và Q=1
-✅ 1
-• 2
-• 3
-• 1, 2, 3
-
-Giá trị chân lý của liên từ P∧Q là sai khi: [1] P=1 và Q=0 [2] P=0 và Q=0 [3] P=0 và Q=1
-• 1
-• 2
-• 3
-✅ 1, 2, 3
-
-
-Giá trị chân lý của liên từ P∨Q là đúng khi: [1] P=1 và Q=0 [2] P=1 và Q=1 [3] P=0 và Q=1
-• 1
-• 2
-• 3
-✅ 1, 2, 3
-
-
-Giá trị chân lý của liên từ  P∧Q là đúng khi: [1] P=1 và Q=0 [2] P=1 và Q=1 [3] P=0 và Q=1
-• 1
-✅ 2
-• 3
-• 1, 2, 3
-
-
-Giá trị chân lý của liên từ P∨Q là sai khi: [1] P=1 và Q=0 [2] P=0 và Q=0 [3] P=0 và Q=1
-• 1
-✅ 2
-• 3
-• 1, 2, 3
-
-Giá trị chân lý của phủ định ¬ là: [1] ¬P là logic F nếu P là logic T. [2] ¬P là logic T nếu P là logic F. [3] P=0 thì ¬P=1.
-• 1
-• 2
-• 3
-✅ 1, 2, 3
-
-Luật giao hoán: [1] ¬(P∨Q) = (¬P∧¬Q). ¬(P∧Q) = (¬P∨¬Q). [2] P∨(Q∧R) = (P∨Q)∧(P∨R). P∧(Q∨R) = (P∧Q)∨(P∧R). [3] (P∧Q) = (Q∧P). (P∨Q) = (Q∨P).
-• 1
-• 2
-✅ 3
-• 1, 2, 3
-
-Toán tử logic: [1] Là hai chữ cái in hoa T và F, trong đó T xác định nội dung của phát biểu là đúng và F xác định nội dung của phát biểu là sai. [2] Là các chữ cái in hoa như A, B, C, D, …. được sử dụng để biểu diễn đề xuất. [3] Gồm có các loại như: ∧ , ∨, ¬, →, ↔
-• 1
-• 2
-✅ 3
-• 1, 2, 3
-
-Thông tin thủ tục: [1] Thông tin trả về giá trị mặc định đúng hoặc sai. [2] Khung có thể chứa thông tin thủ tục giải quyết bài toán. [3] Thông tin mô tả về các thành phần của đối tượng.
-• 1
-✅ 2
-• 3
-• 1, 2, 3
-
-Thông tin mặc định: [1] Thông tin trả về giá trị mặc định đúng hoặc sai. [2] Khung này có thể chứa khung  khác. [3] Thông tin mô tả về các thành phần của đối tượng.
-✅ 1
-• 2
-• 3
-• 1, 2, 3
-
-Tính đóng gói: [1] Thể hiện tri thức của bài toán dưới dạng lớp của nhiều đối tượng chứa nhiều thuộc tính. [2] Khung tổng quát nhất được gọi là khung cơ sở và khung đặc trưng hơn được gọi là khung dẫn xuất. Các thuộc tính của khung dẫn xuất có quyền được thừa kế từ các thuộc tính của khung cơ sở. [3]  Phương pháp biểu diễn này còn được gọi là ngôn ngữ biểu diễn dùng để mã hóa tri thức bằng ký hiệu.
-✅ 1
-• 2
-• 3
-• 1, 2, 3
-
-Biểu diễn tri thức nhờ logic vị từ : [1] Tri thức được thể hiện dưới dạng lớp của các biểu thức logic và cơ sở tri thức giải bài toán được thiết lập trên cơ sở lớp của các biểu thức logic này. [2] Luật suy diễn và thủ tục chứng minh tri thức được lập luận trên cơ sở toán học logic với các yêu cầu đặt ra của bài toán. [3] Với phương pháp biểu diễn này cung cấp ý tưởng để tiếp cận với ngôn ngữ lập trình Prolog trong lĩnh vực trí tuệ nhân tạo.
-• 1
-• 2
-• 3
-✅ 1, 2, 3
-
-Nêu phát biểu đúng nhất về tri thức thủ tục: [1] Là các khẳng định về một sự kiện, khái niệm nào đó (trong phạm vi xác định). [2] Là thủ tục tổng quát mô tả cách giải quyết bài toán. Loại tri thức này bao gồm thủ tục tìm kiếm và luật suy diễn. [3] Cho biết một đối tượng, sự kiện, vấn đề, khái niệm,... được thấy, cảm nhận, cấu tạo như thế nào.
-• 1
-✅ 2
-• 3
-• 1, 2, 3
-
-Suy diễn tiến là: [1] Với chiến lược này, hướng tìm kiếm bắt đầu từ dữ liệu ban đầu của bài toán thông qua không gian trạng thái thái dẫn về đích của bài toán. [2] Thủ tục tìm kiếm bắt đầu từ trạng thái đích của bài toán tìm kiếm thông qua không gian trạng thái để đạt đến trạng thái ban đầu của bài toán. [3] Giải thuật tìm lời giải của bài toán bằng cách tìm kiếm thăm dò thông qua không gian trạng thái mức theo mức.
-✅ 1
-• 2
-• 3
-• 1, 2, 3
-
-Trình bày suy theo chiều rộng là: [1] Chiến lược tìm kiếm suy lùi hay còn được gọi là lý giải suy diễn tiến. [2] Thủ tục tìm kiếm bắt đầu từ trạng thái đích của bài toán tìm kiếm thông qua không gian trạng thái để đạt đến trạng thái ban đầu của bài toán. [3] Giải thuật tìm lời giải của bài toán bằng cách tìm kiếm thăm dò thông qua không gian trạng thái mức theo mức.
-• 1
-• 2
-✅ 3
-• 1, 2, 3
-
-Thuật toán tìm kiếm theo chiều rộng sử dụng thuật toán TREE_SEARCH với cấu trúc dữ liệu: [1] Hàng đợi (QUEUE). [2] Ngăn xếp (STACK). [3] Hàng đợi được sắp xếp. [4] Danh sách liên kết.
-✅ 1
-• 2
-• 3
-• 4
-
-Tìm kiếm Heuristic là: [1] Giải thuật xây dựng dãy nối tiếp của tất cả các trạng thái trên đường lời giải bắt đầu từ trạng thái ban đầu thông qua không gian trạng thái đến trạng thái đích của bài toán. [2] Giải thuật tìm lời giải của bài toán bằng cách tìm kiếm thăm dò thông qua không gian trạng thái mức theo mức. [3] Kỹ thuật chọn lọc nút tốt nhất để tiếp tục quá trình tìm kiếm trong không gian trạng thái của bài toán.
-• 1
-• 2
-✅ 3
-• 1, 2, 3
-
-Trong thuật toán A*, hàm g(n) là: [1] Tổng chi phí ước lượng đường đi từ n tới đích. [2] Tổng chi phí ước lượng từ nút ban đầu tới n. [3] Tổng chi phí ước lượng từ nút n tới đích.
-• 1
-✅ 2
-• 3
-• 1, 2, 3
-
-Thuật toát A* có hàm đánh giá f(n)=: [1] h(n) + (heuristic). [2] h(n) + g(n). [3] g(n).
-• 1
-✅ 2
-• 3
-• 1, 2, 3
-
-Bài toán: Có ba nhà triệu phú và ba tên cướp ở bên bờ tả ngạn một con sông, cùng một chiếc thuyền chở được một hoặc hai người. Hãy tìm cách đưa mọi người qua sông sao cho không để lại ở bên bờ sông kẻ cướp nhiều hơn triệu phú. Trạng thái ban đầu của bài toán là:
-✅ (3, 3, 1)
-• (1, 1, 3)
-• (3, 1, 3)
-• (1, 3, 1)
-
-
-Bài toán: Có ba nhà triệu phú và ba tên cướp ở bên bờ tả ngạn một con sông, cùng một chiếc thuyền chở được một hoặc hai người. Hãy tìm cách đưa mọi người qua sông sao cho không để lại ở bên bờ sông kẻ cướp nhiều hơn triệu phú. Trạng thái kết thúc của bài toán là:
-• (0, 3, 0)
-✅ (0, 0, 0)
-• (3, 0, 3)
-• (0, 0, 3)
-
-
-Bài toán: Có ba nhà triệu phú và ba tên cướp ở bên bờ tả ngạn một con sông, cùng một chiếc thuyền chở được một hoặc hai người. Hãy tìm cách đưa mọi người qua sông sao cho không để lại ở bên bờ sông kẻ cướp nhiều hơn triệu phú. Bài toán có bao nhiêu toán tử:
-• 2
-• 3
-• 4
-✅ 5
-
-Tri thức của bài toán gồm: [1] tri thức mô tả. [2] tri thức thủ tục. [3] tri thức điều khiển.
-• 1
-• 2
-• 3
-✅ 1, 2, 3
-
-Nút là gì: [1] tương ứng với một trạng thái trong không gian trạng thái của bài toán. [2] tương ứng với một luật ứng dụng chuyển tiếp từ nút này đến nút khác. [3] là luật mà vế trái của nó hợp với trạng thái hiện hành và vế phải tạo ra một trạng thái mới.
-✅ 1
-• 2
-• 3
-• 1, 2, 3
-
-Trạng thái đầu là: [1] Là trạng thái khởi tạo của chương trình. [2] Là trạng thái chuyển đổi từ trạng thái này sang trạng thái khác. [3] Là trạng thái kết quả cần tìm kiếm của bài toán.
-✅ 1
-• 2
-• 3
-• 1, 2, 3
-
-Chọn phát biểu KHÔNG đúng: [1] Suy diễn tiến là quá trình suy diễn bắt đầu từ tập sự kiện đã biết, rút ra những sự kiện mới. [2] Suy diễn tiếncho ra khối lượng lớn các thông tin từ một số thông tin ban đầu. [3] Suy diễn tiến là tiếp cận lý tưởng đối với các loại bài toán cần giải quyết các nhiệm vụ như lập kế hoạch, điều hành, điều khiển và diễn dịch. [4] Suy diễn tiến tập trung vào đích đã cho.
-• 1
-• 2
-• 3
-✅ 4
-
-Tri thức thủ tục là: [1] mô tả những gì được biết về bài toán. Loại tri thức này bao gồm các sự kiện, các quan hệ và các tính chất của bài toán. [2] mô tả tổng quát cách giải quyết bài toán. Loại tri thức này bao gồm luật suy diễn hợp lệ, chiến lược tìm kiếm và giải thuật tìm kiếm. [3] là luật chủ chốt để điều khiển quá trình tìm kiếm giải quyết bài toán. [4] Đó là phương pháp thể hiện tri thức trong máy sao cho đủ và hiệu lực để  bài toán được giải tốt nhất.
-• 1
-✅ 2
-• 3
-• 4
-
-Trí tuệ nhân tạo ứng dụng điều khiển Robot theo phương án mắt và tay vào năm nào?
-• 1965
-• 1966
-✅ 1968
-• 1972
-
-Trí tuệ nhân tạo ứng dụng bài toán cờ vua vào năm nào?
-• 1961
-✅ 1963
-• 1964
-• 1980
-
-Trí tuệ nhân tạo chứng minh định lý hình học vào năm nào?
-• 1950
-• 1956
-✅ 1958
-• 1980
-
-Thuật ngữ Trí tuệ nhân tạo xuất hiện khoảng thời gian nào?
-✅ 1950s
-• 1960s
-• 1970s
-• 1980s
-
-Từ nào sau đây KHÔNG liên quan đến thuật toán cây quyết định?
-• Đệ quy
-• Chia để trị
-• Tham lam
-✅ Quy hoạch động
-
-Công thức sau được sử dụng trong thuật toán nào?
-✅ ID3
-• KNN
-• Naïve Bayes
-• SVM`.trim();
-
-    function shuffleArray(array) {
-      return array
-        .map(value => ({ value, sort: Math.random() }))
-        .sort((a, b) => a.sort - b.sort)
-        .map(({ value }) => value);
-    }
-
-    const originalQuestions = rawData.split("\n\n").map(block => {
-      const lines = block.trim().split('\n');
-      const question = lines[0];
-      const answers = lines.slice(1).map(line => {
-        const isCorrect = line.trim().startsWith("✅");
-        const text = line.replace(/^✅|^•/, '').trim();
-        return { text, isCorrect };
-      });
-      return { question, answers };
-    });
-
-    let questions = [];
-    const form = document.getElementById('quizForm');
-    const timerEl = document.getElementById('timer');
-    const resultEl = document.getElementById('result');
-    const submitBtn = document.getElementById('submitBtn');
-    const startBtn = document.getElementById('startBtn');
-    let timeLeft = 300;
-    let timerInterval;
-
-    function formatTime(sec) {
-      const m = String(Math.floor(sec / 60)).padStart(2, '0');
-      const s = String(sec % 60).padStart(2, '0');
-      return `${m}:${s}`;
-    }
-
-    function updateTimer() {
-      timerEl.textContent = `Thời gian còn lại: ${formatTime(timeLeft)}`;
-      if (timeLeft <= 0) {
-        clearInterval(timerInterval);
-        submitExam();
-      }
-      timeLeft--;
-    }
-
-    startBtn.onclick = () => {
-      startBtn.style.display = 'none';
-      timerEl.style.display = 'block';
-      form.style.display = 'block';
-      submitBtn.style.display = 'block';
-      timeLeft = 300;
-      questions = shuffleArray(originalQuestions).map(q => ({
-        question: q.question,
-        answers: shuffleArray(q.answers)
-      }));
-      renderQuestions();
-      timerInterval = setInterval(updateTimer, 1000);
-    };
-
-    function renderQuestions() {
-      form.innerHTML = '';
-      questions.forEach((q, qIndex) => {
-        const div = document.createElement('div');
-        div.className = 'question';
-        div.innerHTML = `<p><strong>Câu ${qIndex + 1}:</strong> ${q.question}</p>`;
-        const options = document.createElement('div');
-        options.className = 'options';
-        q.answers.forEach((ans, aIndex) => {
-          options.innerHTML += `
-            <label>
-              <input type="radio" name="q${qIndex}" value="${aIndex}">
-              ${ans.text}
-            </label>`;
-        });
-        div.appendChild(options);
-        form.appendChild(div);
-      });
-    }
-
-    submitBtn.onclick = submitExam;
-
-    function submitExam() {
-      clearInterval(timerInterval);
-      const unanswered = [];
-      let correct = 0;
-
-      questions.forEach((q, qIndex) => {
-        const selected = form.querySelector(`input[name="q${qIndex}"]:checked`);
-        const div = form.children[qIndex];
-        div.classList.remove("correct", "incorrect");
-        const correctAnswer = q.answers.find(a => a.isCorrect);
-
-        if (!selected) {
-          unanswered.push(qIndex + 1);
-          div.classList.add("incorrect");
-          const feedback = document.createElement('div');
-          feedback.className = 'correct-answer';
-          feedback.textContent = `Bạn chưa chọn. Đáp án đúng: ${correctAnswer.text}`;
-          div.appendChild(feedback);
-        } else {
-          const userAns = q.answers[parseInt(selected.value)];
-          if (userAns.isCorrect) {
-            div.classList.add("correct");
-            correct++;
-          } else {
-            div.classList.add("incorrect");
-            const feedback = document.createElement('div');
-            feedback.className = 'correct-answer';
-            feedback.textContent = `Đáp án đúng: ${correctAnswer.text}`;
-            div.appendChild(feedback);
-          }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trái tim anh thuộc về em ❤️</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Animate.css -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Dancing+Script:wght@700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <!-- AOS (Animate On Scroll) -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <style>
+        .handwriting {
+            font-family: 'Great Vibes', cursive;
         }
-      });
+        .dancing {
+            font-family: 'Dancing Script', cursive;
+        }
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            overflow-x: hidden;
+        }
+        .heart {
+            animation: heartbeat 1.5s infinite;
+        }
+        @keyframes heartbeat {
+            0% { transform: scale(1); }
+            25% { transform: scale(1.1); }
+            50% { transform: scale(1); }
+            75% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        .floating {
+            animation: floating 3s ease-in-out infinite;
+        }
+        @keyframes floating {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-15px); }
+            100% { transform: translateY(0px); }
+        }
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background-color: #f00;
+            opacity: 0.7;
+            animation: confettiFall 5s linear infinite;
+        }
+        @keyframes confettiFall {
+            0% { transform: translateY(-100vh) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
+        }
+        .love-letter {
+            background: url('https://img.freepik.com/free-photo/vintage-grunge-paper-background_1048-3341.jpg') no-repeat center center;
+            background-size: cover;
+            border: 1px solid #d1a684;
+            box-shadow: 0 0 10px rgba(0,0,0,0.3);
+        }
+        .polaroid {
+            background: white;
+            padding: 15px 15px 60px 15px;
+            border: 1px solid #ddd;
+            box-shadow: 0 0 10px rgba(0,0,0,0.2);
+            transform: rotate(-2deg);
+            transition: all 0.3s ease;
+        }
+        .polaroid:hover {
+            transform: rotate(0deg) scale(1.05);
+        }
+        .music-note {
+            position: absolute;
+            font-size: 24px;
+            color: rgba(255,255,255,0.7);
+            animation: floatNote 10s linear infinite;
+        }
+        @keyframes floatNote {
+            0% { transform: translateY(0) translateX(0) rotate(0deg); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(-100vh) translateX(100px) rotate(360deg); opacity: 0; }
+        }
+        .ring {
+            animation: ringRotate 10s linear infinite;
+        }
+        @keyframes ringRotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .photo-frame {
+            border: 15px solid #fff;
+            border-bottom: 40px solid #fff;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            transform: perspective(800px) rotateY(10deg);
+            transition: all 0.5s ease;
+        }
+        .photo-frame:hover {
+            transform: perspective(800px) rotateY(0deg);
+        }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4">
+    <div id="confetti-container" class="fixed inset-0 overflow-hidden pointer-events-none"></div>
+    <div id="music-notes" class="fixed inset-0 overflow-hidden pointer-events-none"></div>
+    
+    <!-- Main container -->
+    <div class="max-w-4xl w-full bg-white rounded-3xl shadow-2xl overflow-hidden animate__animated animate__fadeIn">
+        <!-- Header with flowers -->
+        <div class="relative bg-gradient-to-r from-pink-500 to-purple-600 py-12 px-6 text-center overflow-hidden">
+            <!-- Floating music notes -->
+            <div id="music-note-1" class="music-note" style="left: 10%; top: 20%; animation-delay: 0s;"><i class="fas fa-music"></i></div>
+            <div id="music-note-2" class="music-note" style="left: 30%; top: 50%; animation-delay: 2s;"><i class="fas fa-music"></i></div>
+            <div id="music-note-3" class="music-note" style="left: 70%; top: 30%; animation-delay: 4s;"><i class="fas fa-music"></i></div>
+            <div id="music-note-4" class="music-note" style="left: 85%; top: 60%; animation-delay: 6s;"><i class="fas fa-music"></i></div>
+            
+            <div class="absolute top-0 left-0 right-0 flex justify-between px-6 py-4">
+                <i class="fas fa-heart text-white opacity-30 text-2xl floating" style="animation-delay: 0s;"></i>
+                <i class="fas fa-heart text-white opacity-30 text-2xl floating" style="animation-delay: 0.5s;"></i>
+                <i class="fas fa-heart text-white opacity-30 text-2xl floating" style="animation-delay: 1s;"></i>
+                <i class="fas fa-heart text-white opacity-30 text-2xl floating" style="animation-delay: 1.5s;"></i>
+            </div>
+            
+            <div class="relative z-10">
+                <h1 class="text-5xl md:text-6xl font-bold text-white dancing mb-4">Gửi người con gái anh yêu</h1>
+                <div class="heart inline-block text-red-500 text-6xl animate__animated animate__pulse animate__infinite">❤️</div>
+                <p class="text-white text-xl mt-4 opacity-90">"Một trang web nhỏ cho tình yêu lớn của chúng ta"</p>
+            </div>
+        </div>
+        
+        <!-- Main content -->
+        <div class="p-6 md:p-10 space-y-10">
+            <!-- Love letter section -->
+            <div class="love-letter rounded-xl p-8 md:p-12 text-gray-800 relative overflow-hidden" data-aos="fade-right">
+                <div class="absolute top-0 left-0 w-full h-full bg-black opacity-10"></div>
+                <div class="relative z-10">
+                    <h2 class="text-3xl md:text-4xl font-bold mb-6 handwriting text-center">Thư tỏ tình</h2>
+                    <div class="space-y-4 text-lg">
+                        <p>Em yêu,</p>
+                        <p>Nếu có một điều anh biết chắc trong đời, đó là anh muốn dành trọn phần đời còn lại bên cạnh em.</p>
+                        <p>Từ ngày gặp em, thế giới của anh bừng sáng. Em như làn gió mát lành xua tan đi những u ám, như ánh nắng ban mai ấm áp sau đêm dài lạnh giá.</p>
+                        <p>Anh yêu cách em cười, cách em nói, cách em quan tâm đến mọi người. Anh yêu cả những lúc em giận dỗi, những lúc em khó tính. Với anh, mọi thứ về em đều hoàn hảo.</p>
+                        <p>Hôm nay, anh muốn chính thức hỏi em...</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Memories section -->
+            <div class="bg-blue-50 rounded-xl p-8 border border-blue-200" data-aos="fade-left">
+                <h2 class="text-3xl font-semibold text-blue-800 mb-8 handwriting text-center">Những kỷ niệm đáng nhớ</h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="polaroid" data-aos="zoom-in">
+                        <div class="photo-frame bg-gray-200 h-40 flex items-center justify-center">
+                            <i class="fas fa-heart text-red-500 text-4xl"></i>
+                        </div>
+                        <p class="text-center mt-4 font-medium">Ngày chúng ta gặp</p>
+                    </div>
+                    <div class="polaroid" data-aos="zoom-in" data-aos-delay="200">
+                        <div class="photo-frame bg-gray-200 h-40 flex items-center justify-center">
+                            <i class="fas fa-ice-cream text-purple-500 text-4xl"></i>
+                        </div>
+                        <p class="text-center mt-4 font-medium">Lần đầu hẹn hò</p>
+                    </div>
+                    <div class="polaroid" data-aos="zoom-in" data-aos-delay="400">
+                        <div class="photo-frame bg-gray-200 h-40 flex items-center justify-center">
+                            <i class="fas fa-moon text-yellow-500 text-4xl"></i>
+                        </div>
+                        <p class="text-center mt-4 font-medium">Đêm trăng đầu tiên</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Reasons to love section -->
+            <div class="bg-pink-50 rounded-xl p-8 border border-pink-200" data-aos="fade-up">
+                <h2 class="text-3xl font-semibold text-pink-800 mb-8 handwriting text-center">1001 lý do anh yêu em</h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="bg-white rounded-lg p-6 shadow-md hover:shadow-lg transition duration-300">
+                        <h3 class="text-xl font-semibold text-pink-700 mb-3 flex items-center">
+                            <i class="fas fa-heart mr-2 text-red-500"></i> Vẻ đẹp của em
+                        </h3>
+                        <ul class="space-y-2 text-gray-700">
+                            <li class="flex items-start">
+                                <span class="text-pink-500 mr-2">•</span>
+                                <span>Nụ cười tỏa nắng làm tan chảy trái tim anh</span>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="text-pink-500 mr-2">•</span>
+                                <span>Ánh mắt long lanh như những vì sao đêm</span>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="text-pink-500 mr-2">•</span>
+                                <span>Giọng nói ngọt ngào như mật ong</span>
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <div class="bg-white rounded-lg p-6 shadow-md hover:shadow-lg transition duration-300">
+                        <h3 class="text-xl font-semibold text-pink-700 mb-3 flex items-center">
+                            <i class="fas fa-brain mr-2 text-blue-500"></i> Tính cách của em
+                        </h3>
+                        <ul class="space-y-2 text-gray-700">
+                            <li class="flex items-start">
+                                <span class="text-pink-500 mr-2">•</span>
+                                <span>Em luôn biết cách làm anh cười</span>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="text-pink-500 mr-2">•</span>
+                                <span>Sự quan tâm chu đáo của em dành cho mọi người</span>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="text-pink-500 mr-2">•</span>
+                                <span>Cách em truyền cảm hứng cho anh mỗi ngày</span>
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <div class="bg-white rounded-lg p-6 shadow-md hover:shadow-lg transition duration-300">
+                        <h3 class="text-xl font-semibold text-pink-700 mb-3 flex items-center">
+                            <i class="fas fa-magic mr-2 text-purple-500"></i> Điều đặc biệt
+                        </h3>
+                        <ul class="space-y-2 text-gray-700">
+                            <li class="flex items-start">
+                                <span class="text-pink-500 mr-2">•</span>
+                                <span>Em khiến những ngày bình thường trở nên phi thường</span>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="text-pink-500 mr-2">•</span>
+                                <span>Chỉ cần ở bên em là anh thấy hạnh phúc</span>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="text-pink-500 mr-2">•</span>
+                                <span>Em là người anh muốn chia sẻ mọi khoảnh khắc trong đời</span>
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <div class="bg-white rounded-lg p-6 shadow-md hover:shadow-lg transition duration-300">
+                        <h3 class="text-xl font-semibold text-pink-700 mb-3 flex items-center">
+                            <i class="fas fa-star mr-2 text-yellow-500"></i> Ước mơ cùng em
+                        </h3>
+                        <ul class="space-y-2 text-gray-700">
+                            <li class="flex items-start">
+                                <span class="text-pink-500 mr-2">•</span>
+                                <span>Cùng em xây tổ ấm đầy tiếng cười</span>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="text-pink-500 mr-2">•</span>
+                                <span>Dẫn em đi khắp nơi trên thế giới</span>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="text-pink-500 mr-2">•</span>
+                                <span>Cùng nhau trải qua mọi thăng trầm cuộc sống</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Promise section -->
+            <div class="bg-gradient-to-r from-purple-500 to-pink-600 rounded-xl p-8 text-white" data-aos="zoom-in">
+                <h2 class="text-3xl font-semibold mb-6 handwriting text-center">Lời hứa của anh</h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="bg-white bg-opacity-20 rounded-lg p-6 backdrop-blur-sm">
+                        <div class="text-4xl mb-4 text-center"><i class="fas fa-hand-holding-heart"></i></div>
+                        <h3 class="text-xl font-semibold mb-2 text-center">Yêu thương</h3>
+                        <p class="text-center">Anh sẽ yêu em bằng cả trái tim mình, mỗi ngày đều như ngày đầu tiên</p>
+                    </div>
+                    
+                    <div class="bg-white bg-opacity-20 rounded-lg p-6 backdrop-blur-sm">
+                        <div class="text-4xl mb-4 text-center"><i class="fas fa-shield-alt"></i></div>
+                        <h3 class="text-xl font-semibold mb-2 text-center">Bảo vệ</h3>
+                        <p class="text-center">Anh sẽ là bức tường thành vững chắc che chở cho em suốt đời</p>
+                    </div>
+                    
+                    <div class="bg-white bg-opacity-20 rounded-lg p-6 backdrop-blur-sm">
+                        <div class="text-4xl mb-4 text-center"><i class="fas fa-laugh-beam"></i></div>
+                        <h3 class="text-xl font-semibold mb-2 text-center">Hạnh phúc</h3>
+                        <p class="text-center">Anh sẽ làm mọi cách để thấy em cười mỗi ngày</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Proposal section -->
+            <div class="text-center py-8" data-aos="fade-up" data-aos-delay="200">
+                <div class="ring inline-block mb-8">
+                    <i class="fas fa-ring text-6xl text-yellow-400"></i>
+                </div>
+                
+                <h3 class="text-2xl md:text-3xl font-semibold text-gray-800 mb-6 dancing">Em sẽ làm người yêu anh chứ?</h3>
+                
+                <div class="flex flex-col md:flex-row justify-center items-center space-y-4 md:space-y-0 md:space-x-8">
+                    <button id="yes-btn" class="bg-gradient-to-r from-green-400 to-green-600 hover:from-green-500 hover:to-green-700 text-white font-bold py-4 px-12 rounded-full shadow-lg transform hover:scale-105 transition duration-300 text-xl relative overflow-hidden">
+                        <span class="relative z-10">CÓ, EM ĐỒNG Ý! <i class="fas fa-heart ml-2"></i></span>
+                        <span class="absolute inset-0 bg-white opacity-0 hover:opacity-20 transition duration-300"></span>
+                    </button>
+                    
+                    <button id="no-btn" class="bg-gradient-to-r from-red-400 to-red-600 hover:from-red-500 hover:to-red-700 text-white font-bold py-4 px-8 rounded-full shadow-lg transition duration-300 text-xl relative overflow-hidden" style="transition: all 0.5s ease;">
+                        <span class="relative z-10">KHÔNG <i class="fas fa-times ml-2"></i></span>
+                        <span class="absolute inset-0 bg-white opacity-0 hover:opacity-20 transition duration-300"></span>
+                    </button>
+                </div>
+                
+                <p class="text-gray-500 mt-6 animate__animated animate__flash animate__infinite">(Hãy chọn "CÓ" đi em yêu!)</p>
+            </div>
+        </div>
+        
+        <!-- Footer -->
+        <div class="bg-gray-100 px-6 py-6 text-center">
+            <p class="text-gray-600 mb-2">Made with <i class="fas fa-heart text-red-500 animate__animated animate__pulse animate__infinite"></i> for you</p>
+            <p class="text-sm text-gray-500">Anh yêu em nhiều hơn những gì em thấy trên trang web này</p>
+        </div>
+    </div>
+    
+    <!-- Hidden message -->
+    <div id="success-message" class="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center hidden z-50">
+        <div class="bg-white rounded-3xl p-10 max-w-md mx-4 text-center animate__animated animate__zoomIn">
+            <div class="text-8xl text-pink-500 mb-6 animate__animated animate__heartBeat animate__infinite">
+                <i class="fas fa-heart"></i>
+            </div>
+            <h2 class="text-4xl font-bold text-gray-800 mb-6 dancing">Anh biết em sẽ đồng ý mà! ❤️</h2>
+            <p class="text-gray-600 mb-8 text-lg">Cảm ơn em đã chấp nhận tình cảm của anh. Đây là khởi đầu cho một chuyện tình đẹp nhất của đời anh!</p>
+            
+            <div class="flex justify-center space-x-4">
+                <button id="kiss-btn" class="bg-pink-500 hover:bg-pink-600 text-white font-bold py-3 px-8 rounded-full flex items-center">
+                    Gửi nụ hôn <i class="fas fa-kiss-wink-heart ml-2"></i>
+                </button>
+                <button id="close-message" class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-3 px-8 rounded-full">
+                    Đóng <i class="fas fa-times ml-1"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Kiss message -->
+    <div id="kiss-message" class="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center hidden z-50">
+        <div class="bg-white rounded-3xl p-10 max-w-md mx-4 text-center animate__animated animate__zoomIn">
+            <div class="text-6xl text-red-500 mb-6 animate__animated animate__tada animate__infinite">
+                <i class="fas fa-kiss-wink-heart"></i>
+            </div>
+            <h2 class="text-3xl font-bold text-gray-800 mb-6 dancing">Mwah! 💋</h2>
+            <p class="text-gray-600 mb-8">Anh sẽ hôn em thật nhiều khi gặp mặt nhé! Giờ thì đợi anh đến đón em đi chơi nha!</p>
+            <button id="close-kiss" class="bg-pink-500 hover:bg-pink-600 text-white font-bold py-3 px-8 rounded-full">
+                Đồng ý <i class="fas fa-check ml-1"></i>
+            </button>
+        </div>
+    </div>
 
-      if (unanswered.length > 0) {
-        alert(`Bạn chưa trả lời các câu: ${unanswered.join(', ')}`);
-        return;
-      }
-
-      const score = Math.round((correct / questions.length) * 100);
-      resultEl.style.display = 'block';
-      resultEl.innerHTML = `
-        ✅ Số câu đúng: ${correct}/${questions.length}<br>
-        ❌ Số câu sai: ${questions.length - correct}<br>
-        🎯 Điểm: ${score}/100
-      `;
-      submitBtn.disabled = true;
-    }
-  </script>
+    <!-- AOS JS -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        // Initialize AOS
+        AOS.init({
+            duration: 1000,
+            once: false
+        });
+        
+        // Create music notes
+        function createMusicNotes() {
+            const container = document.getElementById('music-notes');
+            const notes = ['♪', '♫', '♩', '♬', '♭', '♮', '♯'];
+            
+            for (let i = 0; i < 20; i++) {
+                const note = document.createElement('div');
+                note.className = 'music-note';
+                note.style.left = Math.random() * 100 + 'vw';
+                note.style.top = Math.random() * 100 + 'vh';
+                note.style.fontSize = (Math.random() * 20 + 16) + 'px';
+                note.style.animationDuration = (Math.random() * 10 + 5) + 's';
+                note.style.animationDelay = (Math.random() * 5) + 's';
+                note.textContent = notes[Math.floor(Math.random() * notes.length)];
+                container.appendChild(note);
+            }
+        }
+        
+        // Create confetti
+        function createConfetti() {
+            const container = document.getElementById('confetti-container');
+            const colors = ['#f44336', '#e91e63', '#9c27b0', '#673ab7', '#3f51b5', '#2196f3', '#03a9f4', '#00bcd4', '#009688', '#4CAF50', '#8BC34A', '#CDDC39', '#FFEB3B', '#FFC107', '#FF9800', '#FF5722'];
+            
+            for (let i = 0; i < 150; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                confetti.style.left = Math.random() * 100 + 'vw';
+                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                confetti.style.width = Math.random() * 10 + 5 + 'px';
+                confetti.style.height = Math.random() * 10 + 5 + 'px';
+                confetti.style.animationDuration = Math.random() * 3 + 2 + 's';
+                confetti.style.animationDelay = Math.random() * 5 + 's';
+                container.appendChild(confetti);
+            }
+        }
+        
+        // Make NO button move when hover
+        const noBtn = document.getElementById('no-btn');
+        noBtn.addEventListener('mouseover', function() {
+            const maxX = window.innerWidth - this.offsetWidth;
+            const maxY = window.innerHeight - this.offsetHeight;
+            
+            const randomX = Math.floor(Math.random() * maxX);
+            const randomY = Math.floor(Math.random() * maxY);
+            
+            this.style.position = 'absolute';
+            this.style.left = randomX + 'px';
+            this.style.top = randomY + 'px';
+            
+            // Change text temporarily
+            const originalText = this.innerHTML;
+            this.innerHTML = 'Em chắc chứ? <i class="fas fa-question ml-2"></i>';
+            
+            setTimeout(() => {
+                this.innerHTML = originalText;
+            }, 1000);
+        });
+        
+        // Show success message when click YES
+        const yesBtn = document.getElementById('yes-btn');
+        const successMessage = document.getElementById('success-message');
+        const closeMessage = document.getElementById('close-message');
+        const kissBtn = document.getElementById('kiss-btn');
+        const kissMessage = document.getElementById('kiss-message');
+        const closeKiss = document.getElementById('close-kiss');
+        
+        yesBtn.addEventListener('click', function() {
+            createConfetti();
+            createMusicNotes();
+            successMessage.classList.remove('hidden');
+            
+            // Play romantic sound
+            const audio = new Audio('https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3');
+            audio.loop = true;
+            audio.play();
+            
+            // Store audio element for later
+            successMessage.audio = audio;
+        });
+        
+        closeMessage.addEventListener('click', function() {
+            successMessage.classList.add('hidden');
+            if (successMessage.audio) {
+                successMessage.audio.pause();
+            }
+        });
+        
+        kissBtn.addEventListener('click', function() {
+            successMessage.classList.add('hidden');
+            kissMessage.classList.remove('hidden');
+        });
+        
+        closeKiss.addEventListener('click', function() {
+            kissMessage.classList.add('hidden');
+            if (successMessage.audio) {
+                successMessage.audio.pause();
+            }
+        });
+        
+        // Create floating music notes on load
+        createMusicNotes();
+        
+        // Add click effect to YES button
+        yesBtn.addEventListener('mousedown', function() {
+            this.style.transform = 'scale(0.95)';
+        });
+        
+        yesBtn.addEventListener('mouseup', function() {
+            this.style.transform = 'scale(1.05)';
+        });
+        
+        // Add heartbeat effect to the ring
+        setInterval(() => {
+            const ring = document.querySelector('.ring');
+            ring.style.transform = 'scale(1.1)';
+            setTimeout(() => {
+                ring.style.transform = 'scale(1)';
+            }, 300);
+        }, 2000);
+    </script>
 </body>
 </html>
