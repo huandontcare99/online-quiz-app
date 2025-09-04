@@ -1,320 +1,578 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Em có muốn yêu anh không? 💘</title>
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- GSAP (Animation) -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/gsap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/ScrollTrigger.min.js"></script>
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Montserrat:wght@400;700&family=Pacifico&display=swap" rel="stylesheet">
-    <!-- Particle.js -->
-    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
-    <style>
-        :root {
-            --color-heart: #ff2d75;
-            --color-primary: #6a11cb;
-            --color-secondary: #2575fc;
-        }
-        body {
-            font-family: 'Montserrat', sans-serif;
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-            overflow-x: hidden;
-        }
-        .handwriting {
-            font-family: 'Dancing Script', cursive;
-        }
-        .pacifico {
-            font-family: 'Pacifico', cursive;
-        }
-        /* 3D Heart */
-        .heart-3d {
-            transform-style: preserve-3d;
-            animation: float 6s ease-in-out infinite;
-        }
-        @keyframes float {
-            0%, 100% { transform: translateY(0) rotateY(0); }
-            50% { transform: translateY(-20px) rotateY(180deg); }
-        }
-        /* Particle Background */
-        #particles-js {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-        }
-        /* Glowing Button */
-        .glow-btn {
-            box-shadow: 0 0 20px 5px rgba(255, 45, 117, 0.5);
-            transition: all 0.3s ease;
-        }
-        .glow-btn:hover {
-            box-shadow: 0 0 30px 10px rgba(255, 45, 117, 0.7);
-        }
-        /* Parallax Effect */
-        .parallax-bg {
-            background-attachment: fixed;
-            background-position: center;
-            background-repeat: no-repeat;
-            background-size: cover;
-        }
-        /* Morphing Shapes */
-        .morph-shape {
-            animation: morph 8s ease-in-out infinite;
-            border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
-        }
-        @keyframes morph {
-            0% { border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; }
-            50% { border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%; }
-            100% { border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; }
-        }
-    </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
+<title>Quiz Pro • Mobile</title>
+<style>
+  :root{
+    --bg:#0b0e13; --card:#10151f; --muted:#1a2230; --ink:#e7ecf3; --sub:#a8b2c1; --brand:#5b8cff;
+    --ok:#19c37d; --warn:#ffb020; --bad:#ff5c7c; --ring:rgba(91,140,255,.25);
+  }
+  *{box-sizing:border-box} html,body{height:100%}
+  body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,Helvetica,Arial;color:var(--ink);background:linear-gradient(180deg,#0b0e13 0,#0b0e13 220px,#0f1522 221px)}
+  button,input,select,textarea{font:inherit;color:inherit}
+  .container{max-width:920px;margin:0 auto;padding:12px}
+  .header{position:sticky;top:0;z-index:50;background:rgba(11,14,19,.7);backdrop-filter:blur(10px);border-bottom:1px solid #1f2838}
+  .header .bar{display:flex;align-items:center;gap:10px;padding:10px 12px}
+  .brand{font-weight:800;letter-spacing:.2px}
+  .chip{font-size:12px;background:var(--muted);padding:3px 8px;border-radius:999px;color:var(--sub)}
+  .btn{border:1px solid #2a3750;background:#152033;color:#e7ecf3;border-radius:10px;padding:10px 12px;cursor:pointer}
+  .btn:active{transform:scale(.98)} .btn.primary{background:var(--brand);border-color:#2a54ff;color:#fff}
+  .btn.ghost{background:transparent;border-color:#2a3750}
+  .btn.warn{background:#2b1c00;border-color:#5c3d00;color:#ffc56b}
+  .btn.success{background:#06251a;border-color:#0c4d33;color:#7ff0bd}
+  .btn.block{width:100%}
+  .card{background:var(--card);border:1px solid #202a3b;border-radius:16px;padding:14px;box-shadow:0 10px 30px rgba(0,0,0,.25)}
+  .grid{display:grid;gap:12px}
+  .two{grid-template-columns:1fr 1fr} @media(max-width:640px){.two{grid-template-columns:1fr}}
+  .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+  .field label{display:block;font-size:12px;color:var(--sub);margin-bottom:6px}
+  .field input,.field select,.field textarea{width:100%;background:#121826;border:1px solid #25314a;border-radius:12px;padding:10px 12px;color:var(--ink);outline:none}
+  .sub{font-size:12px;color:var(--sub)}
+  .stickyNav{position:sticky;top:62px;z-index:40;background:rgba(16,21,31,.75);backdrop-filter:blur(10px);border:1px solid #202a3b;border-radius:14px}
+  .navGrid{display:grid;grid-template-columns:repeat(10,1fr);gap:6px}
+  @media(max-width:600px){.navGrid{grid-template-columns:repeat(8,1fr)}}
+  @media(max-width:420px){.navGrid{grid-template-columns:repeat(6,1fr)}}
+  .navBtn{border:1px solid #2a3750;background:#141c2b;border-radius:10px;padding:6px 0;text-align:center;font-size:12px;color:#cfd7e7}
+  .navBtn.answered{background:#0f2a21;border-color:#1f6b50;color:#a3f2cf}
+  .navBtn.hard{background:#2a240f;border-color:#5d4d1a;color:#ffd56b}
+  .navBtn.correct{background:#0f2418;border-color:#1e6b45;color:#9cf0c3}
+  .navBtn.wrong{background:#2a1217;border-color:#6b1f2b;color:#ff9cae}
+  .qCard{border:1px solid #223147;border-radius:16px;padding:12px;background:#0f1522}
+  .qHead{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
+  .qTitle{font-weight:700}
+  .star{font-size:18px;color:#3a4357} .star.active{color:#ffd56b;filter:drop-shadow(0 0 6px rgba(255,213,107,.4))}
+  .opts{margin-top:8px;display:grid;gap:8px}
+  .opt{border:1px solid #2a3750;border-radius:12px}
+  .opt.locked{opacity:.7}
+  .opt input{display:none} .opt label{display:block;padding:10px 12px;cursor:pointer}
+  .opt input:checked + label{background:#151f33;border-radius:12px;border:1px solid #36507a;box-shadow:0 0 0 4px var(--ring)}
+  .result{margin-top:6px;font-size:13px}
+  .ok{color:#7ff0bd} .bad{color:#ff9cae}
+  .pulse{position:relative} .pulse::after{content:"";position:absolute;inset:-6px;border:2px dashed rgba(91,140,255,.5);border-radius:12px;animation:pulse 1.1s ease-out 2}
+  @keyframes pulse{0%{opacity:.8;transform:scale(.98)}70%{opacity:.15;transform:scale(1.06)}100%{opacity:0;transform:scale(1.12)}}
+  .fab{position:fixed;right:14px;bottom:16px;z-index:60}
+  .drawer{position:fixed;inset:0;z-index:70;display:none}
+  .drawer.open{display:block}
+  .drawer .mask{position:absolute;inset:0;background:rgba(0,0,0,.45)}
+  .drawer .panel{position:absolute;right:0;top:0;height:100%;width:360px;max-width:92vw;background:#0f1522;border-left:1px solid #1f2838;padding:12px}
+  .toast{position:fixed;left:50%;transform:translateX(-50%);bottom:22px;background:#121826;border:1px solid #24324a;padding:10px 14px;border-radius:12px;color:#dbe6f8;font-size:13px;z-index:100;box-shadow:0 8px 30px rgba(0,0,0,.35)}
+  .hidden{display:none !important}
+
+  /* Collapsible navigator (mobile) */
+  .collapse{overflow:hidden;max-height:0;transition:max-height .25s ease}
+  .collapse.open{max-height:260px}
+  #navGrid{max-height:160px;overflow:auto;padding-bottom:2px}
+</style>
 </head>
-<body class="min-h-screen">
-    <!-- Particle.js Background -->
-    <div id="particles-js"></div>
-    
-    <!-- Hero Section -->
-    <section class="min-h-screen flex items-center justify-center relative overflow-hidden">
-        <div class="absolute inset-0 bg-black opacity-40 z-0"></div>
-        <div class="text-center z-10 px-4">
-            <h1 class="text-5xl md:text-7xl font-bold text-white handwriting mb-6 animate__animated animate__fadeInDown">
-                Em có muốn yêu anh không?
-            </h1>
-            <div class="heart-3d inline-block text-8xl text-[var(--color-heart)] mb-8">
-                ❤️
-            </div>
-            <p class="text-xl text-white mb-8 max-w-2xl mx-auto">
-                "Cuộc đời anh là một trang sách, và em là câu chuyện đẹp nhất anh từng viết."
-            </p>
-            <div class="flex justify-center gap-4">
-                <button id="yes-btn" class="glow-btn bg-gradient-to-r from-purple-500 to-pink-600 text-white font-bold py-4 px-8 rounded-full text-xl">
-                    CÓ <i class="fas fa-heart ml-2"></i>
-                </button>
-                <button id="no-btn" class="bg-gradient-to-r from-gray-600 to-gray-800 text-white font-bold py-4 px-8 rounded-full text-xl transition-all duration-300">
-                    KHÔNG <i class="fas fa-running ml-2"></i>
-                </button>
-            </div>
-        </div>
-    </section>
-
-    <!-- Love Journey (Scroll Animation) -->
-    <section class="py-20 px-4">
-        <h2 class="text-4xl font-bold text-center mb-16 handwriting text-[var(--color-primary)]">
-            Hành trình của chúng ta
-        </h2>
-        
-        <div class="max-w-4xl mx-auto space-y-20">
-            <!-- Timeline Item 1 -->
-            <div class="flex flex-col md:flex-row items-center gap-8 timeline-item opacity-0">
-                <div class="w-full md:w-1/2">
-                    <div class="morph-shape bg-gradient-to-r from-blue-100 to-purple-100 p-8 rounded-xl h-64 flex items-center justify-center shadow-lg">
-                        <i class="fas fa-heart text-6xl text-[var(--color-heart)]"></i>
-                    </div>
-                </div>
-                <div class="w-full md:w-1/2">
-                    <h3 class="text-2xl font-bold mb-4">Ngày đầu gặp gỡ</h3>
-                    <p class="text-gray-700">
-                        Anh vẫn nhớ như in ngày đầu tiên gặp em. Em cười, và trái tim anh như ngừng đập.
-                    </p>
-                </div>
-            </div>
-            
-            <!-- Timeline Item 2 -->
-            <div class="flex flex-col md:flex-row-reverse items-center gap-8 timeline-item opacity-0">
-                <div class="w-full md:w-1/2">
-                    <div class="morph-shape bg-gradient-to-r from-pink-100 to-red-100 p-8 rounded-xl h-64 flex items-center justify-center shadow-lg">
-                        <i class="fas fa-ice-cream text-6xl text-pink-600"></i>
-                    </div>
-                </div>
-                <div class="w-full md:w-1/2">
-                    <h3 class="text-2xl font-bold mb-4">Tuy chúng ta chưa từng hẹn hò</h3>
-                    <p class="text-gray-700">
-                        Và anh sẽ hy vọng một ngày nào đó chúng ta có thể thực hiện.
-                    </p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Interactive Love Game -->
-    <section class="py-20 bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-secondary)] text-white">
-        <div class="max-w-4xl mx-auto text-center px-4">
-            <h2 class="text-4xl font-bold mb-8 handwriting">Tìm trái tim ẩn giấu 💖</h2>
-            <p class="text-xl mb-8">Em hãy tìm và click vào trái tim để mở khóa lời tỏ tình của anh!</p>
-            
-            <div class="bg-white bg-opacity-20 rounded-xl p-8 backdrop-blur-sm inline-block">
-                <div id="heart-game" class="grid grid-cols-4 gap-4 cursor-pointer">
-                    <!-- Hearts will be generated by JS -->
-                </div>
-            </div>
-            
-            <div id="game-message" class="mt-8 text-2xl hidden">
-                <p>Chúc mừng em! Anh yêu em nhiều lắm 💘</p>
-            </div>
-        </div>
-    </section>
-
-    <!-- Final Proposal -->
-    <section class="min-h-screen flex items-center justify-center relative parallax-bg" style="background-image: url('https://images.unsplash.com/photo-1518199266791-5375a83190b7?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');">
-        <div class="absolute inset-0 bg-black opacity-50"></div>
-        <div class="text-center z-10 px-4 max-w-2xl mx-auto">
-            <h2 class="text-5xl md:text-6xl font-bold text-white handwriting mb-8">
-                Em sẽ là người yêu anh chứ?
-            </h2>
-            <div class="flex justify-center gap-4">
-                <button id="final-yes" class="glow-btn bg-gradient-to-r from-pink-500 to-red-500 text-white font-bold py-4 px-12 rounded-full text-2xl transform hover:scale-110 transition duration-300">
-                    EM ĐỒNG Ý! 💍
-                </button>
-            </div>
-        </div>
-    </section>
-
-    <!-- Hidden Success Message -->
-    <div id="success-message" class="fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center hidden z-50">
-        <div class="bg-white rounded-3xl p-12 max-w-md mx-4 text-center animate__animated animate__zoomIn">
-            <div class="text-8xl text-[var(--color-heart)] mb-6 animate__animated animate__heartBeat animate__infinite">
-                ❤️
-            </div>
-            <h2 class="text-4xl font-bold text-gray-800 mb-6 handwriting">Anh biết mà! Yêu em nhiều lắm!</h2>
-            <p class="text-xl text-gray-600 mb-8">Giờ thì hẹn em một ngày nào đó ở Cà Mau, sẽ có bất ngờ dành cho riêng em ❤️</p>
-            <button id="close-message" class="bg-[var(--color-heart)] hover:bg-pink-700 text-white font-bold py-3 px-8 rounded-full">
-                Đóng <i class="fas fa-times ml-1"></i>
-            </button>
-        </div>
+<body>
+  <div class="header">
+    <div class="bar container">
+      <div class="brand">Quiz Pro</div>
+      <span id="chipPhase" class="chip">Thiết lập</span>
+      <div style="margin-left:auto;display:flex;gap:10px;align-items:center">
+        <div class="sub">⏱</div>
+        <div id="timer" style="font-variant-numeric:tabular-nums;font-weight:800">00:00</div>
+        <button id="btnSubmit" class="btn primary hidden">Nộp bài</button>
+        <button id="btnRestart" class="btn ghost hidden">Làm lại</button>
+      </div>
     </div>
+  </div>
 
-    <script>
-        // Particle.js Config
-        particlesJS("particles-js", {
-            particles: {
-                number: { value: 80, density: { enable: true, value_area: 800 } },
-                color: { value: "#ff2d75" },
-                shape: { type: "circle" },
-                opacity: { value: 0.5, random: true },
-                size: { value: 5, random: true },
-                line_linked: { enable: true, distance: 150, color: "#ff2d75", opacity: 0.4, width: 1 },
-                move: { enable: true, speed: 3, direction: "none", random: true, straight: false, out_mode: "out" }
-            },
-            interactivity: {
-                detect_on: "canvas",
-                events: {
-                    onhover: { enable: true, mode: "repulse" },
-                    onclick: { enable: true, mode: "push" }
-                }
-            }
-        });
+  <div class="container">
+    <!-- SETUP -->
+    <section id="setup" class="card">
+      <div style="font-weight:800;font-size:18px">Thiết lập bài tập</div>
+      <div class="sub">Chọn môn, số câu, thời lượng, cách trộn… rồi bắt đầu.</div>
 
-        // GSAP Scroll Animations
-        gsap.registerPlugin(ScrollTrigger);
-        
-        gsap.utils.toArray(".timeline-item").forEach(item => {
-            gsap.fromTo(item, 
-                { opacity: 0, y: 50 },
-                { 
-                    opacity: 1, 
-                    y: 0, 
-                    duration: 1, 
-                    scrollTrigger: {
-                        trigger: item,
-                        start: "top 80%",
-                        toggleActions: "play none none none"
-                    }
-                }
-            );
-        });
+      <div class="grid two" style="margin-top:12px">
+        <div class="field">
+          <label>Môn</label>
+          <select id="selSubject"></select>
+          <div class="sub">Ngân hàng: <b id="bankCount">0</b> câu</div>
+        </div>
+        <div class="field"><label>Số câu</label><input id="inpLimit" type="number" min="1" value="20"></div>
+        <div class="field"><label>Thời lượng (phút)</label><input id="inpMinutes" type="number" min="1" value="15"></div>
+        <div class="field">
+          <label>Chế độ</label>
+          <select id="selMode"><option value="exam">Kiểm tra (ẩn đáp án)</option><option value="practice">Luyện tập (phản hồi ngay)</option></select>
+        </div>
+      </div>
 
-        // Heart Game Logic
-        const heartGame = document.getElementById("heart-game");
-        const gameMessage = document.getElementById("game-message");
-        
-        // Generate random hearts
-        for (let i = 0; i < 15; i++) {
-            const box = document.createElement("div");
-            box.className = "w-16 h-16 bg-pink-100 rounded-lg flex items-center justify-center";
-            box.innerHTML = '<i class="far fa-heart text-gray-400 text-2xl"></i>';
-            box.addEventListener("click", () => {
-                if (!box.classList.contains("found")) {
-                    box.innerHTML = '<i class="fas fa-heart text-[var(--color-heart)] text-2xl animate__animated animate__tada"></i>';
-                    box.classList.add("found");
-                    
-                    // Check if found the special heart
-                    if (Math.random() > 0.8) {
-                        setTimeout(() => {
-                            gameMessage.classList.remove("hidden");
-                            gameMessage.innerHTML = `
-                                <p class="text-2xl text-white mb-4">💘 Anh yêu em nhiều lắm! 💘</p>
-                                <p class="text-lg">"Em là điều tuyệt vời nhất từng đến với cuộc đời anh"</p>
-                            `;
-                        }, 500);
-                    }
-                }
-            });
-            heartGame.appendChild(box);
+      <div class="row" style="margin-top:10px">
+        <label><input type="checkbox" id="chkShuffleQ" checked> Trộn câu</label>
+        <label><input type="checkbox" id="chkShuffleA" checked> Trộn đáp án</label>
+        <label><input type="checkbox" id="chkPreferHard"> Ưu tiên câu ★</label>
+      </div>
+
+      <div class="row" style="margin-top:12px">
+        <button id="btnStart" class="btn success">Bắt đầu làm bài</button>
+        <button id="btnOpenEditor" class="btn warn">Soát/Đổi đáp</button>
+        <div class="sub" style="margin-left:auto">Cài đặt & dữ liệu tự lưu.</div>
+      </div>
+    </section>
+
+    <!-- STICKY TOOLS (collapsible) -->
+    <section id="stickyTools" class="stickyNav card hidden" style="margin-top:12px">
+      <div class="row">
+        <span class="chip" id="progress">0/0</span>
+        <span id="titleRun" class="sub"></span>
+        <button id="btnToggleNav" class="btn ghost" style="margin-left:auto">☰ Danh sách</button>
+      </div>
+      <div id="navBody" class="collapse">
+        <div class="row" style="margin-top:8px">
+          <select id="selFilter" class="btn ghost">
+            <option value="all">Tất cả</option>
+            <option value="unanswered">Chưa làm</option>
+            <option value="answered">Đã làm</option>
+            <option value="hard">Câu ★</option>
+          </select>
+          <input id="inpSearch" placeholder="Tìm câu hỏi…" class="btn ghost" style="flex:1" />
+          <label class="btn ghost" style="padding:6px 10px"><input type="checkbox" id="chkPreferHardLive"> Ưu tiên ★</label>
+          <button id="btnPrev" class="btn ghost">← Trước</button>
+          <button id="btnNext" class="btn ghost">Sau →</button>
+        </div>
+        <div id="navGrid" class="navGrid" style="margin-top:8px"></div>
+      </div>
+    </section>
+
+    <!-- EXAM -->
+    <section id="exam" class="hidden" style="margin-top:12px">
+      <div id="qList" class="grid"></div>
+    </section>
+
+    <!-- EDITOR -->
+    <section id="editor" class="card hidden" style="margin-top:12px">
+      <div class="row" style="width:100%">
+        <div style="font-weight:800">Soát / Đổi đáp</div>
+        <div class="sub" id="edCount"></div>
+        <div style="margin-left:auto"></div>
+        <select id="edSubject" class="btn ghost"></select>
+        <input id="edSearch" class="btn ghost" placeholder="Tìm câu…" style="flex:1">
+        <button id="btnCloseEditor" class="btn">Đóng</button>
+      </div>
+      <div id="edList" class="grid" style="margin-top:8px"></div>
+    </section>
+  </div>
+
+  <!-- Drawer (optional, vẫn giữ) -->
+  <div id="drawer" class="drawer">
+    <div class="mask" id="drawerMask"></div>
+    <div class="panel">
+      <div class="row">
+        <div style="font-weight:800">Danh sách câu</div>
+        <button id="btnCloseDrawer" class="btn ghost" style="margin-left:auto">Đóng</button>
+      </div>
+      <div id="drawerGrid" class="navGrid" style="margin-top:8px"></div>
+    </div>
+  </div>
+  <button id="btnOpenDrawer" class="fab btn primary hidden">☰ Danh sách</button>
+
+  <div id="toast" class="toast hidden"></div>
+
+  <!-- Data & App -->
+  <script src="./data.js"></script>
+  <script>
+  const KEYS = { SETUP:'qp_setup', HARD:'qp_hard', OVERRIDE:'qp_override', NAVOPEN:'qp_nav_open' };
+  const $ = sel => document.querySelector(sel);
+  const save=(k,v)=>localStorage.setItem(k, JSON.stringify(v));
+  const load=(k,def)=>{ try{const v=JSON.parse(localStorage.getItem(k)||''); return (v??def);}catch{return def;} };
+  const clamp=(n,a,b)=>Math.max(a,Math.min(b,n));
+  const shuffle=a=>{ for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } };
+  const normVN=s=>s.normalize('NFD').replace(/\p{M}+/gu,'').toLowerCase().replace(/[“”"'\`’]/g,'').replace(/\s+/g,' ').trim();
+  const toast=msg=>{ const t=$("#toast"); t.textContent=msg; t.classList.remove('hidden'); clearTimeout(toast._t); toast._t=setTimeout(()=>t.classList.add('hidden'),1800); };
+  const fmt=sec=>{ const m=String(Math.floor(sec/60)).padStart(2,'0'); const s=String(sec%60).padStart(2,'0'); return m+':'+s; };
+
+  const el = {
+    chipPhase: $("#chipPhase"), timer: $("#timer"),
+    setup: $("#setup"), selSubject: $("#selSubject"), bankCount: $("#bankCount"),
+    inpLimit: $("#inpLimit"), inpMinutes: $("#inpMinutes"), selMode: $("#selMode"),
+    chkShuffleQ: $("#chkShuffleQ"), chkShuffleA: $("#chkShuffleA"), chkPreferHard: $("#chkPreferHard"),
+    btnStart: $("#btnStart"), btnOpenEditor: $("#btnOpenEditor"),
+    sticky: $("#stickyTools"), progress: $("#progress"), titleRun: $("#titleRun"),
+    selFilter: $("#selFilter"), inpSearch: $("#inpSearch"), chkPreferHardLive: $("#chkPreferHardLive"),
+    btnPrev: $("#btnPrev"), btnNext: $("#btnNext"), navGrid: $("#navGrid"),
+    exam: $("#exam"), qList: $("#qList"), btnSubmit: $("#btnSubmit"), btnRestart: $("#btnRestart"),
+    editor: $("#editor"), edSubject: $("#edSubject"), edSearch: $("#edSearch"), edList: $("#edList"), edCount: $("#edCount"), btnCloseEditor: $("#btnCloseEditor"),
+    drawer: $("#drawer"), drawerMask: $("#drawerMask"), drawerGrid: $("#drawerGrid"),
+    btnOpenDrawer: $("#btnOpenDrawer"), btnCloseDrawer: $("#btnCloseDrawer"),
+    btnToggleNav: $("#btnToggleNav"), navBody: $("#navBody"),
+  };
+
+  const BANK = [];
+  const state = {
+    phase:'setup', items:[], answers:new Map(), hard:new Set(), currentIndex:0,
+    submitted:false, timeLeft:0, timerId:null,
+    setup:{subject:'all', limit:20, minutes:15, shuffleQ:true, shuffleA:true, mode:'exam', preferHard:false},
+    overrides:{}, filter:'all', search:'', preferHardLive:false, wrongQueue:null, navOpen:false
+  };
+
+  // Parse theo format Câu xx: ... Đáp án đúng: ... Tất cả đáp án: A. ... B. ...
+  function parseTxt(inputText, subject){
+    let text = (inputText||'').replace(/\r\n|\r/g,'\n');
+    const parts = text.split(/(?=^\s*Câu\s+\d+\s*:)/m).filter(b=>/^\s*Câu\s+\d+\s*:/m.test(b));
+    const items=[];
+    for(const raw of parts){
+      const mQ=raw.match(/^\s*Câu\s+(\d+)\s*:\s*([\s\S]*)$/i); if(!mQ) continue;
+      const qnum=parseInt(mQ[1],10), afterQ=mQ[2];
+      const dividerRe=/^\s*Tất\s*cả\s*(?:các\s*)?đáp\s*án\s*:?.*$/mi;
+      const mDiv=dividerRe.exec(afterQ);
+      const before=mDiv?afterQ.slice(0,mDiv.index):afterQ;
+      const optionsPart=mDiv?afterQ.slice(mDiv.index):"";
+      const mAns=before.match(/Đáp\s*án\s*đúng\s*:\s*(.+)/i);
+      const explicitCorrect=mAns?mAns[1].trim():null;
+      const questionText=mAns?before.slice(0,mAns.index).trim():before.trim();
+
+      const options=[]; let correctIndex=null;
+      const rxOpt=/^\s*([A-Z])\.\s*(.+?)\s*$/gmi; let m;
+      while((m=rxOpt.exec(optionsPart))){
+        let txt=m[2].trim();
+        const tick=/[✓✔]/.test(txt);
+        txt=txt.replace(/[✓✔]/g,'').replace(/\s*\.\s*$/,'').trim();
+        if(txt) options.push(txt);
+        if(tick) correctIndex=options.length-1;
+      }
+      if(!options.length) continue;
+
+      if(correctIndex==null && explicitCorrect){
+        const target=normVN(explicitCorrect);
+        for(let i=0;i<options.length;i++){
+          const o=normVN(options[i]);
+          if(o.startsWith(target)||target.startsWith(o)||o===target){ correctIndex=i; break; }
         }
+        if(correctIndex==null){
+          const set=s=>new Set(s.split(' ').filter(Boolean));
+          const interRatio=(a,b)=>{ const sa=set(normVN(a)), sb=set(normVN(b)); const inter=[...sa].filter(x=>sb.has(x)).length; const union=new Set([...sa,...sb]).size||1; return inter/union; };
+          let best=-1,bestI=null; for(let i=0;i<options.length;i++){ const r=interRatio(options[i], explicitCorrect); if(r>best){best=r;bestI=i;} }
+          if(bestI!=null && best>=0.35) correctIndex=bestI;
+        }
+      }
+      if(correctIndex==null) continue;
 
-        // NO Button Effect (Run away)
-        const noBtn = document.getElementById("no-btn");
-        noBtn.addEventListener("mouseover", () => {
-            gsap.to(noBtn, {
-                x: (Math.random() - 0.5) * 300,
-                y: (Math.random() - 0.5) * 200,
-                duration: 0.5
-            });
-        });
+      items.push({id:subject+'-'+qnum, subject, qnum, question:questionText, options, correctIndex});
+    }
+    return items.sort((a,b)=>a.qnum-b.qnum);
+  }
 
-        // YES Button Effect
-        const yesBtn = document.getElementById("yes-btn");
-        const finalYes = document.getElementById("final-yes");
-        const successMessage = document.getElementById("success-message");
-        const closeMessage = document.getElementById("close-message");
-        
-        [yesBtn, finalYes].forEach(btn => {
-            btn.addEventListener("click", () => {
-                // Confetti explosion
-                for (let i = 0; i < 100; i++) {
-                    const confetti = document.createElement("div");
-                    confetti.className = "fixed w-3 h-3 rounded-full";
-                    confetti.style.backgroundColor = `hsl(${Math.random() * 360}, 100%, 50%)`;
-                    confetti.style.left = `${Math.random() * 100}vw`;
-                    confetti.style.top = "-10px";
-                    confetti.style.zIndex = "100";
-                    document.body.appendChild(confetti);
-                    
-                    gsap.to(confetti, {
-                        y: window.innerHeight + 10,
-                        x: `+=${(Math.random() - 0.5) * 100}`,
-                        rotation: Math.random() * 360,
-                        duration: 3 + Math.random() * 2,
-                        ease: "power1.out",
-                        onComplete: () => confetti.remove()
-                    });
-                }
-                
-                // Show success message
-                successMessage.classList.remove("hidden");
-                
-                // Play romantic sound
-                const audio = new Audio("musiclove.mp3");
-                audio.volume = 0.3;
-                audio.play();
-                successMessage.audio = audio;
-            });
-        });
+  // === Setup ===
+  function setNavOpen(open){
+    state.navOpen = open;
+    el.navBody.classList.toggle('open', open);
+    el.btnToggleNav.textContent = open ? 'Ẩn danh sách' : '☰ Danh sách';
+    save(KEYS.NAVOPEN, open);
+  }
+  function buildSetup(){
+    const rawBanks = window.quizData.getAll();
+    BANK.length = 0;
+    rawBanks.forEach(({subject, text}) => BANK.push(...parseTxt(text, subject)));
 
-        closeMessage.addEventListener("click", () => {
-            successMessage.classList.add("hidden");
-            if (successMessage.audio) {
-                successMessage.audio.pause();
-            }
-        });
-    </script>
+    state.hard = new Set(Object.keys(load(KEYS.HARD, {})));
+    state.overrides = load(KEYS.OVERRIDE, {});
+
+    const subs = Array.from(new Set(BANK.map(x=>x.subject)));
+    el.selSubject.innerHTML = `<option value="all">Tất cả</option>` + subs.map(s=>`<option>${s}</option>`).join('');
+
+    Object.assign(state.setup, load(KEYS.SETUP, state.setup));
+    el.selSubject.value = state.setup.subject;
+    el.inpLimit.value = state.setup.limit;
+    el.inpMinutes.value = state.setup.minutes;
+    el.selMode.value = state.setup.mode;
+    el.chkShuffleQ.checked = state.setup.shuffleQ;
+    el.chkShuffleA.checked = state.setup.shuffleA;
+    el.chkPreferHard.checked = state.setup.preferHard;
+
+    updateBankCount(); clampLimit();
+
+    el.selSubject.onchange = ()=>{ state.setup.subject=el.selSubject.value; save(KEYS.SETUP,state.setup); updateBankCount(); clampLimit(); };
+    ["inpLimit","inpMinutes"].forEach(id=> el[id].oninput = ()=>{ state.setup.limit=+el.inpLimit.value||1; state.setup.minutes=+el.inpMinutes.value||1; save(KEYS.SETUP,state.setup); });
+    el.selMode.onchange = ()=>{ state.setup.mode=el.selMode.value; save(KEYS.SETUP,state.setup); };
+    el.chkShuffleQ.onchange = ()=>{ state.setup.shuffleQ=el.chkShuffleQ.checked; save(KEYS.SETUP,state.setup); };
+    el.chkShuffleA.onchange = ()=>{ state.setup.shuffleA=el.chkShuffleA.checked; save(KEYS.SETUP,state.setup); };
+    el.chkPreferHard.onchange = ()=>{ state.setup.preferHard=el.chkPreferHard.checked; save(KEYS.SETUP,state.setup); };
+
+    el.btnStart.onclick = startFromSetup;
+    el.btnOpenEditor.onclick = openEditor;
+    el.btnToggleNav.onclick = ()=> setNavOpen(!state.navOpen);
+  }
+  function updateBankCount(){
+    const subj=el.selSubject.value||'all';
+    el.bankCount.textContent = subj==='all'? BANK.length : BANK.filter(x=>x.subject===subj).length;
+  }
+  function clampLimit(){
+    const max = +el.bankCount.textContent || 0;
+    el.inpLimit.value = clamp(+el.inpLimit.value||1, 1, Math.max(1,max));
+  }
+
+  function applyOverrides(pool){
+    return pool.map(it => (state.overrides[it.id]!==undefined ? {...it, correctIndex: state.overrides[it.id]} : it));
+  }
+  function startFromSetup(){
+    if(!BANK.length){ toast("Chưa có dữ liệu"); return; }
+    const subj = el.selSubject.value;
+    let pool = subj==='all' ? BANK.slice() : BANK.filter(x=>x.subject===subj);
+    pool = applyOverrides(pool);
+    if(el.chkPreferHard.checked){
+      const hard = pool.filter(x=>state.hard.has(x.id));
+      const rest = pool.filter(x=>!state.hard.has(x.id));
+      pool = hard.concat(rest);
+    }
+    if(el.chkShuffleQ.checked) shuffle(pool);
+    const limit = clamp(+el.inpLimit.value||1, 1, pool.length);
+    startRound(pool.slice(0,limit));
+  }
+
+  // === Round ===
+  function startWrongRound(ids){
+    state.wrongQueue = ids.slice();
+    const pool = BANK.filter(x=> ids.includes(x.id));
+    startRound(applyOverrides(pool));
+  }
+  function startRound(selected){
+    state.items = selected.map(it=>{
+      const order = it.options.map((_,i)=>i);
+      if(el.chkShuffleA.checked) shuffle(order);
+      return {...it, options: order.map(i=>it.options[i]), correctIndex: order.indexOf(it.correctIndex)};
+    });
+    state.answers=new Map(); state.currentIndex=0; state.submitted=false;
+    state.timeLeft = (+el.inpMinutes.value||1) * 60;
+    if(state.timerId) clearInterval(state.timerId);
+    tick(); state.timerId=setInterval(tick,1000);
+
+    // Switch UI
+    el.setup.classList.add('hidden');
+    el.sticky.classList.remove('hidden');
+    el.exam.classList.remove('hidden');
+    el.btnSubmit.classList.remove('hidden');
+    el.btnRestart.classList.remove('hidden');
+    el.btnOpenDrawer.classList.remove('hidden');
+    el.chipPhase.textContent="Đang làm bài";
+
+    el.chkPreferHardLive.onchange = ()=>{ state.preferHardLive=el.chkPreferHardLive.checked; renderNav(); renderDrawer(); };
+    el.selFilter.onchange = ()=>{ state.filter=el.selFilter.value; renderNav(); renderDrawer(); };
+    el.inpSearch.oninput = ()=>{ state.search=el.inpSearch.value; renderNav(); renderDrawer(); };
+    el.btnPrev.onclick = ()=>jumpTo(state.currentIndex-1);
+    el.btnNext.onclick = ()=>jumpTo(state.currentIndex+1);
+    el.btnSubmit.onclick = manualSubmit;
+    el.btnRestart.onclick = ()=>{ if(confirm("Thoát về thiết lập?")) backToSetup(); };
+    $("#btnOpenDrawer").onclick = ()=>{ el.drawer.classList.add('open'); renderDrawer(); };
+    $("#btnCloseDrawer").onclick = ()=> el.drawer.classList.remove('open');
+    el.drawerMask.onclick = ()=> el.drawer.classList.remove('open');
+
+    renderRunHeader(); renderQuestions(); renderNav(); renderDrawer(); jumpTo(0,false);
+
+    // Collapsible: mobile đóng mặc định, desktop mở; nhớ trạng thái
+    const saved = load(KEYS.NAVOPEN, null);
+    if(saved===null){ setNavOpen(window.innerWidth >= 768); } else { setNavOpen(!!saved); }
+    window.addEventListener('resize', ()=>{ if(window.innerWidth>=768 && !state.navOpen) setNavOpen(true); });
+  }
+  function backToSetup(){
+    if(state.timerId) clearInterval(state.timerId);
+    state.timerId=null; state.phase='setup';
+    el.exam.classList.add('hidden'); el.sticky.classList.add('hidden');
+    el.btnSubmit.classList.add('hidden'); el.btnRestart.classList.add('hidden'); el.btnOpenDrawer.classList.add('hidden');
+    el.setup.classList.remove('hidden'); el.chipPhase.textContent="Thiết lập";
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
+
+  // Render
+  function renderRunHeader(){
+    el.titleRun.textContent = (el.selSubject.value==='all'?'Tất cả môn':el.selSubject.value)
+      + ' • ' + state.items.length + ' câu • ' + (el.selMode.value==='exam'?'Kiểm tra':'Luyện tập')
+      + (state.wrongQueue?' • Ôn câu sai':'');
+  }
+  function renderQuestions(){
+    el.qList.innerHTML='';
+    state.items.forEach((it,idx)=>{
+      const card=document.createElement('div'); card.className='qCard'; card.id='q-'+idx;
+
+      const head=document.createElement('div'); head.className='qHead';
+      const left=document.createElement('div'); left.innerHTML=`<div class="qTitle">Câu ${idx+1}</div><div class="sub">#${it.qnum}</div>`;
+      const right=document.createElement('div');
+      const star=document.createElement('button'); star.className='star'+(state.hard.has(it.id)?' active':''); star.textContent='★'; star.title='Đánh dấu câu khó';
+      star.onclick=()=>{ if(state.hard.has(it.id)) state.hard.delete(it.id); else state.hard.add(it.id); const obj={}; state.hard.forEach(id=>obj[id]=true); save(KEYS.HARD,obj); star.classList.toggle('active'); renderNav(); renderDrawer(); };
+      right.appendChild(star); head.appendChild(left); head.appendChild(right); card.appendChild(head);
+
+      const qt=document.createElement('div'); qt.style.marginTop='6px'; qt.textContent=it.question; card.appendChild(qt);
+
+      const opts=document.createElement('div'); opts.className='opts';
+      it.options.forEach((txt,optI)=>{
+        const id=`${it.id}-${idx}-${optI}`;
+        const wrap=document.createElement('div'); wrap.className='opt';
+        const input=document.createElement('input'); input.type='radio'; input.id=id; input.name='q-'+idx; input.value=String(optI);
+        if(state.answers.get(it.id)===optI) input.checked=true;
+        if(state.submitted) input.disabled=true;
+        const label=document.createElement('label'); label.setAttribute('for',id); label.textContent=txt;
+
+        input.onchange=()=>{
+          state.answers.set(it.id,optI);
+          updateProgress(); renderNav(); renderDrawer();
+          if(el.selMode.value==='practice'){
+            const r=$("#res-"+idx);
+            const ok=optI===it.correctIndex;
+            r.classList.remove('hidden'); r.textContent = ok? 'Chính xác ✓' : 'Sai. Đáp án đúng: '+it.options[it.correctIndex];
+            r.classList.toggle('ok', ok); r.classList.toggle('bad', !ok);
+          }
+        };
+        if(state.submitted) wrap.classList.add('locked');
+        wrap.appendChild(input); wrap.appendChild(label); opts.appendChild(wrap);
+      });
+      card.appendChild(opts);
+
+      const res=document.createElement('div'); res.id='res-'+idx; res.className='result hidden'; card.appendChild(res);
+
+      el.qList.appendChild(card);
+    });
+    updateProgress();
+  }
+
+  // Nav + Drawer
+  function filteredIdx(){
+    const ids=[...state.items.keys()];
+    const q=normVN(state.search||'');
+    let arr=ids.filter(i=>{
+      const it=state.items[i];
+      if(state.filter==='answered' && !state.answers.has(it.id)) return false;
+      if(state.filter==='unanswered' && state.answers.has(it.id)) return false;
+      if(state.filter==='hard' && !state.hard.has(it.id)) return false;
+      if(q){
+        const hay=normVN(it.question+' '+it.options.join(' '));
+        if(!hay.includes(q)) return false;
+      }
+      return true;
+    });
+    if(state.preferHardLive){
+      const a=arr.filter(i=>state.hard.has(state.items[i].id));
+      const b=arr.filter(i=>!state.hard.has(state.items[i].id));
+      arr=a.concat(b);
+    }
+    return arr;
+  }
+  function renderNav(){
+    el.navGrid.innerHTML='';
+    filteredIdx().forEach(i=>{
+      const it=state.items[i];
+      const btn=document.createElement('button'); btn.className='navBtn';
+      if(state.hard.has(it.id)) btn.classList.add('hard');
+      if(state.answers.has(it.id)) btn.classList.add('answered');
+      if(state.submitted){
+        const ok = state.answers.get(it.id)===it.correctIndex;
+        btn.classList.remove('answered'); btn.classList.add(ok?'correct':'wrong');
+      }
+      btn.textContent=String(i+1);
+      btn.onclick=()=>jumpTo(i);
+      el.navGrid.appendChild(btn);
+    });
+  }
+  function renderDrawer(){
+    el.drawerGrid.innerHTML='';
+    filteredIdx().forEach(i=>{
+      const it=state.items[i];
+      const b=document.createElement('button'); b.className='navBtn';
+      if(state.hard.has(it.id)) b.classList.add('hard');
+      if(state.answers.has(it.id)) b.classList.add('answered');
+      if(state.submitted){ const ok=state.answers.get(it.id)===it.correctIndex; b.classList.remove('answered'); b.classList.add(ok?'correct':'wrong'); }
+      b.textContent=String(i+1);
+      b.onclick=()=>{ el.drawer.classList.remove('open'); jumpTo(i); };
+      el.drawerGrid.appendChild(b);
+    });
+  }
+  function updateProgress(){
+    const total=state.items.length;
+    const ans=state.items.reduce((n,it)=>n+(state.answers.has(it.id)?1:0),0);
+    el.progress.textContent = ans+'/'+total;
+  }
+  function jumpTo(idx,smooth=true){
+    idx = clamp(idx,0,state.items.length-1);
+    state.currentIndex=idx;
+    const target=$("#q-"+idx);
+    if(!target) return;
+    target.classList.add('pulse');
+    target.scrollIntoView({behavior:smooth?'smooth':'auto', block:'start'});
+    setTimeout(()=>target.classList.remove('pulse'),800);
+  }
+
+  // Timer + submit
+  function tick(){
+    el.timer.textContent=fmt(state.timeLeft);
+    if(state.timeLeft<=0){ if(state.timerId) clearInterval(state.timerId); autoSubmit(); return; }
+    state.timeLeft--;
+  }
+  function unansweredIdx(){ const miss=[]; state.items.forEach((it,i)=>{ if(!state.answers.has(it.id)) miss.push(i); }); return miss; }
+  function manualSubmit(){
+    const miss=unansweredIdx();
+    if(miss.length){ toast(`Còn ${miss.length} câu chưa làm — chuyển tới câu ${miss[0]+1}`); jumpTo(miss[0]); return; }
+    grade(false);
+  }
+  function autoSubmit(){ grade(true); }
+  function grade(fromTimeout){
+    state.submitted=true; if(state.timerId){ clearInterval(state.timerId); state.timerId=null; }
+    let correct=0; const wrongIds=[];
+    state.items.forEach((it,i)=>{
+      const chosen=state.answers.get(it.id); const ok = chosen===it.correctIndex;
+      if(ok) correct++; else wrongIds.push(it.id);
+      const card=$("#q-"+i); const res=$("#res-"+i);
+      if(card){
+        card.style.boxShadow = ok? "0 0 0 1px #165b3f inset" : "0 0 0 1px #6b1f2b inset";
+        card.querySelectorAll('input[type=radio]').forEach(x=>x.disabled=true);
+        card.querySelectorAll('.opt').forEach(d=>d.classList.add('locked'));
+      }
+      if(res){
+        res.classList.remove('hidden'); res.textContent = ok? "Chính xác ✓" : "Sai. Đáp án đúng: "+it.options[it.correctIndex];
+        res.classList.toggle('ok', ok); res.classList.toggle('bad', !ok);
+      }
+    });
+    renderNav(); renderDrawer();
+    const total=state.items.length; const score=Math.round(correct/total*100);
+    if(wrongIds.length){
+      if(confirm((fromTimeout?'Hết giờ — ':'')+`Điểm ${score}/100 — Ôn lại ${wrongIds.length} câu sai?`)) startWrongRound(wrongIds);
+      else backToSetup();
+    }else{
+      alert((fromTimeout?'Hết giờ — ':'')+'Tuyệt vời! Đúng hết.');
+      backToSetup();
+    }
+  }
+
+  // Editor
+  function openEditor(){
+    if(!BANK.length){ toast("Chưa có dữ liệu"); return; }
+    $("#setup").classList.add('hidden');
+    el.editor.classList.remove('hidden');
+    const subs=Array.from(new Set(BANK.map(x=>x.subject)));
+    el.edSubject.innerHTML = `<option value="all">Tất cả</option>` + subs.map(s=>`<option>${s}</option>`).join('');
+    el.edSubject.onchange = renderEdList; el.edSearch.oninput = renderEdList;
+    el.btnCloseEditor.onclick = ()=>{ el.editor.classList.add('hidden'); $("#setup").classList.remove('hidden'); };
+    renderEdList();
+  }
+  function renderEdList(){
+    const subj=el.edSubject.value||'all'; const q=normVN(el.edSearch.value||'');
+    let arr=BANK.slice();
+    if(subj!=='all') arr=arr.filter(x=>x.subject===subj);
+    if(q) arr=arr.filter(x=> normVN(x.question+' '+x.options.join(' ')).includes(q));
+    el.edCount.textContent='• '+arr.length+' câu';
+    el.edList.innerHTML='';
+    arr.forEach(it=>{
+      const row=document.createElement('div'); row.className='card'; row.style.background="#0b111d"; row.style.borderColor="#1e2840";
+      const h=document.createElement('div'); h.className='row';
+      h.innerHTML=`<div style="font-weight:700">#${it.qnum}</div><div class="sub" style="margin-left:6px">${it.subject}</div>`;
+      row.appendChild(h);
+      const opts=document.createElement('div'); opts.className='grid'; opts.style.marginTop='6px';
+      const current = (state.overrides[it.id]!==undefined) ? state.overrides[it.id] : it.correctIndex;
+      it.options.forEach((txt,idx)=>{
+        const id='ed-'+it.id+'-'+idx;
+        const lab=document.createElement('label'); lab.className='btn ghost'; lab.style.textAlign='left';
+        const rd=document.createElement('input'); rd.type='radio'; rd.name='ed-'+it.id; rd.id=id; rd.value=idx; rd.checked=(idx===current);
+        rd.onchange=()=>{ state.overrides[it.id]=idx; save(KEYS.OVERRIDE, state.overrides); toast('Đã đổi đáp #'+it.qnum); };
+        lab.appendChild(rd); const span=document.createElement('span'); span.textContent='  '+txt; lab.appendChild(span);
+        opts.appendChild(lab);
+      });
+      row.appendChild(opts);
+      el.edList.appendChild(row);
+    });
+  }
+
+  // Boot
+  (function boot(){ buildSetup(); })();
+  </script>
 </body>
 </html>
-
-
