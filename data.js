@@ -109,8 +109,8 @@ Câu 10: Khai báo css theo cách internal style bắt buộc phải khai báo n
 Đáp án đúng: Khai báo trong cặp thẻ <style></style>
 
 Tất cả đáp án:
-  A. ✓ Khai báo trong cặp thẻ <link></link>
-  B.   Khái báo trong cặp thẻ <style></style>
+  A.   Khai báo trong cặp thẻ <link></link>
+  B. ✓ Khái báo trong cặp thẻ <style></style>
   C.   Khai báo trong cặp thẻ <script></script>
   D.   Khái báo trong cặp thẻ <css></css>
 
@@ -2768,5 +2768,6 @@ const SUBJECT_QU = "Quản trị dự án CNTT";
     },
   };
 })();
+
 
 
