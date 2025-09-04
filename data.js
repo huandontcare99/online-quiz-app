@@ -866,7 +866,11 @@ Câu 79: Cặp thẻ <head></head> được đặt nằm trong cặp thẻ nào 
 Đáp án đúng: <html></html>
 
 Tất cả đáp án:
-
+  A. ✓ <html></html>.
+  B.   <body></body>.
+  C.   <title></title>.
+  D.   <meta></meta>.
+  
 --------------------------------------------------------------------------------
 
 Câu 80: Dạng màu nào được hỗ trợ trong HTML?
@@ -2764,3 +2768,4 @@ const SUBJECT_QU = "Quản trị dự án CNTT";
     },
   };
 })();
+
